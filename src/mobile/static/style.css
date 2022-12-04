@@ -1,0 +1,93 @@
+html {
+  display: flex;
+  justify-content: center;
+}
+
+body {
+  font-family: "helvetica";
+  font-size: 60px;
+}
+
+a:hover, a:visited, a:link, a:active {
+  text-decoration: none;
+}
+
+div {
+  position: relative;
+  width: 100vw;
+  text-align: center;
+}
+
+span {
+  position: absolute;
+  display: block;
+  height: 100%;
+  width: 50px;
+  background: gray;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: white;
+  opacity: 1;
+  transition: opacity 0.6s;
+  text-align: center;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  background-color: white;
+  opacity: 1;
+  transition: opacity 0.6s;
+  text-align: center;
+  word-spacing: 50px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.noSelect {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.noSelect:focus {
+    outline: none !important;
+}
+
+.bgImage {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  max-height: 90%;
+}
+
+.chord1 {
+  left: 18%;
+  opacity: 0.5;
+}
+
+.chord2 {
+  left: 38%;
+  opacity: 0.5;
+}
+
+.chord3 {
+  left: 58%;
+  opacity: 0.5;
+}
+
+.chord4 {
+  left: 78%;
+  opacity: 0.5;
+}
+

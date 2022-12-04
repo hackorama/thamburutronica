@@ -1,0 +1,10 @@
+[tool.isort]
+profile = "black"
+[tool.pylint.'MESSAGES CONTROL']
+max-line-length = 80
+disable = [
+    "missing-docstring",
+    "line-too-long",
+    "fixme",
+   "logging-fstring-interpolation"
+]

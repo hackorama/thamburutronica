@@ -1,0 +1,49 @@
+import os
+
+
+class CONFIG:
+    """
+    Common configuration used across modules
+    """
+
+    PROJECT_NAME = "Thamburu"
+    VERSION = "0.1.0"
+
+    DEBUG = False
+    TRACE = False
+
+    RESTRICT_MEMORY = True
+
+    MCU = "PICO W"
+    MCU_SUPPORTS_WIFI = True
+
+    EVENT_LOOP_SECS = 0.2
+
+    STARTUP_LED_R = 0
+    STARTUP_LED_G = 200
+    STARTUP_LED_B = 0
+
+    AUDIO_CHANNELS = 1
+
+    GAIN_DEFAULT = 16
+    GAIN_MAX = 30
+
+    BEEP_FREQ = 262  # Note C
+
+    TOUCH_BUTTON_COUNT = 12
+
+    CHIME_AMBIENT_AUDIO = "chime-ambient.mp3"
+    CHIME_BELL_AUDIO = "beep.mp3"
+    CHIME_BELL_AUDIO_CHANNEL = 1
+    CHIME_MODE_SIMPLE = "SIMPLE"
+    CHIME_MODE_MIXER = "MIXER"
+    CHIME_MODE = CHIME_MODE_SIMPLE
+
+    CLOCK_CHIME_START_HOURS = 9  # 9 AM
+    CLOCK_CHIME_END_HOURS = 22  # 10 PM
+
+    WIFI_SSID_ENV = "WIFI_SSID"
+    WIFI_PASSWORD_ENV = "WIFI_PASSWORD"
+    APP_API_SERVER_ENV = "APP_API_SERVER"
+
+    FLAIR_ANIMATION_SPEED = 3

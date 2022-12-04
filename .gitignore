@@ -1,0 +1,14 @@
+# all hidden files except .gitignore
+.*
+!/.gitignore
+# python ignores
+venv
+# ide ignores
+.idea
+# app ignores
+*.log
+*.pid
+secrets.py
+lib
+DEVICE_HOST
+qr-wifi.png

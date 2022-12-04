@@ -1,0 +1,159 @@
+Thamburu 0.1.0
+Connecting to hackorama ...
+Connected hackorama
+My MAC addr: ['0x28', '0xcd', '0xc1', '0x6', '0x32', '0xe5']
+My IP address is 192.168.1.220
+Starting server on 192.168.1.220 ...
+Listening on http://192.168.1.220:80
+ERROR: beep.mp3 not found in /sd
+Starting event loop at tick rate 0.25 secs
+GET http://192.168.1.163/device/register/192.168.1.220 ...
+GET http://192.168.1.163/device/register/192.168.1.220 -> "192.168.1.220 ok"
+STOP
+PLAY anusarana.mp3
+Playing: /sd/anusarana.mp3 0/1
+LED (0, 220, 0)
+LED (0, 240, 0)
+STOP
+Stopping audio
+LED (0, 255, 0)
+LED (0, 200, 0)
+PLAY sarana.mp3
+Playing: /sd/sarana.mp3 0/1
+LED (0, 220, 0)
+STOP
+Stopping audio
+LED (0, 240, 0)
+LED (0, 200, 0)
+PLAY panchamam.mp3
+Playing: /sd/panchamam.mp3 0/1
+STOP
+Stopping audio
+LED (0, 220, 0)
+LED (0, 200, 0)
+PLAY manthram.mp3
+Playing: /sd/manthram.mp3 0/1
+LED (0, 220, 0)
+STOP
+Stopping audio
+LED (0, 240, 0)
+LED (0, 200, 0)
+STOP
+BEEP 262
+Playing: beep.mp3 0/1
+LED (0, 0, 200)
+LED (0, 0, 220)
+LED (0, 0, 200)
+PLAY panchamam.mp3
+Playing: /sd/panchamam.mp3 0/1
+LED (0, 0, 220)
+LED (0, 0, 240)
+LED (0, 0, 255)
+LED (0, 0, 235)
+STOP
+Stopping audio
+LED (0, 0, 215)
+LED (0, 0, 200)
+STOP
+BEEP 262
+Playing: beep.mp3 0/1
+LED (200, 0, 0)
+LED (220, 0, 0)
+LED (200, 0, 0)
+PLAY spring.mp3
+Playing: /sd/spring.mp3 0/1
+LED (220, 0, 0)
+LED (240, 0, 0)
+LED (255, 0, 0)
+LED (235, 0, 0)
+LED (215, 0, 0)
+LED (195, 0, 0)
+LED (175, 0, 0)
+LED (155, 0, 0)
+LED (135, 0, 0)
+LED (115, 0, 0)
+STOP
+Stopping audio
+LED (95, 0, 0)
+LED (200, 0, 0)
+STOP
+BEEP 262
+Playing: beep.mp3 0/1
+LED (0, 200, 0)
+LED (0, 220, 0)
+LED (0, 200, 0)
+PLAY panchamam.mp3
+Playing: /sd/panchamam.mp3 0/1
+LED (0, 220, 0)
+LED (0, 240, 0)
+LED (0, 255, 0)
+LED (0, 235, 0)
+LED (0, 215, 0)
+LED (0, 195, 0)
+LED (0, 175, 0)
+LED (0, 155, 0)
+LED (0, 135, 0)
+LED (0, 115, 0)
+LED (0, 95, 0)
+LED (0, 75, 0)
+STOP
+Stopping audio
+LED (0, 55, 0)
+LED (0, 200, 0)
+LED (0, 0, 0)
+SLEEP
+WAKE
+PLAY manthram.mp3
+Playing: /sd/manthram.mp3 0/1
+LED (0, 200, 0)
+LED (0, 220, 0)
+STOP
+Stopping audio
+LED (0, 240, 0)
+LED (0, 200, 0)
+LED (0, 0, 0)
+SLEEP
+WAKE
+STOP
+BEEP 262
+Playing: beep.mp3 0/1
+LED (0, 0, 200)
+LED (0, 0, 200)
+LED (0, 0, 220)
+LED (0, 0, 200)
+PLAY panchamam.mp3
+Playing: /sd/panchamam.mp3 0/1
+LED (0, 0, 220)
+LED (0, 0, 240)
+LED (0, 0, 255)
+LED (0, 0, 235)
+LED (0, 0, 215)
+LED (0, 0, 195)
+LED (0, 0, 175)
+LED (0, 0, 155)
+LED (0, 0, 135)
+STOP
+Stopping audio
+LED (0, 0, 115)
+LED (0, 0, 200)
+STOP
+BEEP 262
+Playing: beep.mp3 0/1
+LED (200, 0, 0)
+LED (220, 0, 0)
+LED (200, 0, 0)
+PLAY autumn.mp3
+Playing: /sd/autumn.mp3 0/1
+LED (220, 0, 0)
+LED (240, 0, 0)
+LED (255, 0, 0)
+LED (235, 0, 0)
+LED (215, 0, 0)
+LED (195, 0, 0)
+LED (175, 0, 0)
+LED (155, 0, 0)
+LED (135, 0, 0)
+STOP
+Stopping audio
+LED (115, 0, 0)
+LED (200, 0, 0)

@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "static",
+    "lib": [
+      "es2015",
+      "dom"
+    ]
+  },
+  "files": [
+    "script.ts"
+  ]
+}

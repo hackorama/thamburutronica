@@ -1,0 +1,41 @@
+INFO:     Uvicorn running on http://0.0.0.0:80 (Press CTRL+C to quit)
+INFO:     Started parent process [91286]
+INFO:     Started server process [91309]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Started server process [91307]
+INFO:     Started server process [91308]
+INFO:     Waiting for application startup.
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Application startup complete.
+INFO:server:write 192.168.1.220 -> DEVICE_HOST
+INFO:     192.168.1.220:50200 - "GET /device/register/192.168.1.220 HTTP/1.1" 200 OK
+INFO:server:read DEVICE_HOST -> 192.168.1.220
+INFO:server:device chord 1 -> ok
+INFO:     192.168.1.221:64679 - "GET /chord/1 HTTP/1.1" 200 OK
+INFO:server:read DEVICE_HOST -> 192.168.1.220
+INFO:server:device chord 1 -> ok
+INFO:     192.168.1.221:64680 - "GET /chord/1 HTTP/1.1" 200 OK
+INFO:server:device chord 0 -> ok
+INFO:     192.168.1.221:64680 - "GET /chord/0 HTTP/1.1" 200 OK
+INFO:server:device chord 4 -> ok
+INFO:     192.168.1.221:64681 - "GET /chord/4 HTTP/1.1" 200 OK
+INFO:     192.168.1.221:64682 - "GET /share.html HTTP/1.1" 304 Not Modified
+INFO:     192.168.1.221:64682 - "GET /qr.png HTTP/1.1" 304 Not Modified
+INFO:     192.168.1.221:64686 - "GET /style.css HTTP/1.1" 304 Not Modified
+INFO:     192.168.1.221:64684 - "GET /qr.png HTTP/1.1" 304 Not Modified
+INFO:     192.168.1.221:64683 - "GET /qr-wifi.png HTTP/1.1" 304 Not Modified
+INFO:     192.168.1.221:64685 - "GET /qr-wifi.png HTTP/1.1" 304 Not Modified
+INFO:server:device chord 0 -> ok
+INFO:     192.168.1.221:64681 - "GET /chord/0 HTTP/1.1" 200 OK
+INFO:     192.168.1.221:64682 - "GET /index.html HTTP/1.1" 304 Not Modified
+INFO:     192.168.1.221:64682 - "GET /qr.png HTTP/1.1" 200 OK
+INFO:     192.168.1.221:64683 - "GET /qr-wifi.png HTTP/1.1" 200 OK
+INFO:     192.168.1.221:64684 - "GET /script.js HTTP/1.1" 304 Not Modified
+INFO:server:device ping -> pong
+INFO:     192.168.1.221:64684 - "GET /device/ping HTTP/1.1" 200 OK
+INFO:server:device chord 2 -> ok
+INFO:     192.168.1.221:64689 - "GET /chord/2 HTTP/1.1" 200 OK
+INFO:server:device chord 0 -> ok
+INFO:     192.168.1.221:64691 - "GET /chord/0 HTTP/1.1" 200 OK
