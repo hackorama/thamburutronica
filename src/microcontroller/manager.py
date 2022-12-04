@@ -26,20 +26,26 @@ class Manager:
 
     def __init__(self):
 
-        gc.collect()
+        # On a memory restricted MCU like Pi Pico call the garbage collector early and often
+        # Refer: https://learn.adafruit.com/Memory-saving-tips-for-CircuitPython
+        if CONFIG.RESTRICT_MEMORY:
+            gc.collect()
 
         self.play = Play()
 
-        gc.collect()
+        if CONFIG.RESTRICT_MEMORY:
+            gc.collect()
 
         self.pico = Pico()
 
-        gc.collect()
+        if CONFIG.RESTRICT_MEMORY:
+            gc.collect()
 
         self.flair = Flair()
         self.chime = Chime()
 
-        gc.collect()
+        if CONFIG.RESTRICT_MEMORY:
+            gc.collect()
 
         self.web = None
         if CONFIG.MCU_SUPPORTS_WIFI:
@@ -47,7 +53,8 @@ class Manager:
 
             self.web = get_web_instance()
 
-        gc.collect()
+        if CONFIG.RESTRICT_MEMORY:
+            gc.collect()
 
         self.pico.check_storage(self.play.get_files())
         self.pico.set_led(
@@ -57,7 +64,8 @@ class Manager:
         if not CONFIG.RESTRICT_MEMORY:
             self.diag()
 
-        gc.collect()
+        if CONFIG.RESTRICT_MEMORY:
+            gc.collect()
 
     def __process_clicks(self):
         return self.play.process_clicks(self.pico.get_touches(), self.pico.get_clicks())
@@ -133,7 +141,7 @@ class Manager:
             elif self.play.is_wake(action):
                 print(f"WAKE")
                 self.pico.wake()
-        if len(actions):
+        if len(actions) and CONFIG.RESTRICT_MEMORY:
             gc.collect()
 
     def diag(self):
