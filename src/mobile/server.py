@@ -24,6 +24,10 @@ Simple REST API server for:
  - Web UI can send the chord clicks
  - Proxies the chord clicks from web UI to the device
  - Also serves the web UI static resources to the browser
+
+NOTE: No HTTPS and auth enabled since both the device and server
+      are on trusted local 192.168.0.0/16 network.
+      Please enable them as required if deploying on external network
 """
 
 

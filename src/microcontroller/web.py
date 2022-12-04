@@ -30,6 +30,10 @@ class Web:
       WIFI_SSID = 'ssid'
       WIFI_PASSWORD = 'password'
       APP_API_SERVER = '192.168.x.y'
+
+    NOTE: No HTTPS and auth enabled since both the device and server
+          are on trusted local 192.168.0.0/16 network.
+          Please enable them as required if deploying on external network
     """
 
     RESTART_ON_WIFI_ERROR = False
