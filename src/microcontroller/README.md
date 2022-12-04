@@ -24,13 +24,13 @@ CircuitPython entry point [code.py](./code.py)
 
 ## Hardware
 
-| Board | Chip | Description |
-| --- | --- | --- |
-| Raspberry Pi [Pico W](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html) | Raspberry Pi [RP2040](https://www.raspberrypi.com/documentation/microcontrollers/rp2040.html#welcome-to-rp2040) | MCU |
-| | Infineon [CYW43439](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-4-802.11n/cyw43439/?redirId=216343) | Wi-Fi, Bluetooth |
-| Adafruit [12-Key Capacitive Touch Sensor](https://www.adafruit.com/product/4830) | NXP [MPR121](https://www.nxp.com/products/no-longer-manufactured/proximity-capacitive-touch-sensor-controller:MPR121)  | Proximity Capacitive Touch |
-| Sparkfun [Qwiic Speaker Amp](https://www.sparkfun.com/products/20690) | Texas Instruments [TPA2016D2](https://www.ti.com/product/TPA2016D2)  | Audio amp |
-| Cytron [Maker Pi Pico Base](https://www.cytron.io/p-maker-pi-pico-base) |  | Base |
+| Board                                                                                                    | Chip                                                                                                                                                          | Description                                |
+|----------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|
+| Raspberry Pi [Pico W](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html) | Raspberry Pi [RP2040](https://www.raspberrypi.com/documentation/microcontrollers/rp2040.html#welcome-to-rp2040)                                               | MCU                                        |
+|                                                                                                          | Infineon [CYW43439](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-4-802.11n/cyw43439/?redirId=216343) | Wi-Fi, Bluetooth                           |
+| Adafruit [12-Key Capacitive Touch Sensor](https://www.adafruit.com/product/4830)                         | NXP [MPR121](https://www.nxp.com/products/no-longer-manufactured/proximity-capacitive-touch-sensor-controller:MPR121)                                         | Proximity Capacitive Touch                 |
+| Sparkfun [Qwiic Speaker Amp](https://www.sparkfun.com/products/20690)                                    | Texas Instruments [TPA2016D2](https://www.ti.com/product/TPA2016D2)                                                                                           | Audio amp                                  |
+| Cytron [Maker Pi Pico Base](https://www.cytron.io/p-maker-pi-pico-base)                                  |                                                                                                                                                               | Base for micro SD card slot and audio jack |
 
 Programmed using [CircuitPython](https://circuitpython.org/board/raspberry_pi_pico/) 8
 
