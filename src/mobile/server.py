@@ -1,4 +1,5 @@
 import logging
+import os
 from typing import Optional
 
 import requests
@@ -10,8 +11,7 @@ logging.basicConfig()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-DEVICE_HOST = None  ## TODO FIXME Convert global to class variable
-
+DEVICE_HOST_ENV = "DEVICE_HOST"
 DEVICE_HOST_FILE = "DEVICE_HOST"
 REQUEST_TIMEOUT_SECS = 30
 CHORD_COUNT = 4
@@ -31,28 +31,34 @@ NOTE: No HTTPS and auth enabled since both the device and server
 """
 
 
+def get_env_device_host() -> Optional[str]:
+    return os.environ.get(DEVICE_HOST_ENV)
+
+
+def set_env_device_host(host: str) -> None:
+    os.environ[DEVICE_HOST_ENV] = host
+
+
 def store_device_host(host: str) -> None:
-    global DEVICE_HOST  ## pylint: disable=global-statement
-    DEVICE_HOST = host
+    set_env_device_host(host)
     try:
         with open(DEVICE_HOST_FILE, "w", encoding="utf-8") as file:
-            logger.info(f"write {DEVICE_HOST} -> {DEVICE_HOST_FILE}")
-            file.write(DEVICE_HOST)
+            logger.info(f"write {host} -> {DEVICE_HOST_FILE}")
+            file.write(host)
     except Exception:  # pylint: disable=broad-except
-        logger.exception(
-            f"Failed writing device host {DEVICE_HOST} to {DEVICE_HOST_FILE}"
-        )
+        logger.exception(f"Failed writing device host {host} to {DEVICE_HOST_FILE}")
 
 
 def read_device_host() -> Optional[str]:
-    global DEVICE_HOST  ## pylint: disable=global-statement
-    if DEVICE_HOST:
-        return DEVICE_HOST
+    host = get_env_device_host()
+    if host:
+        return host
     try:
         with open(DEVICE_HOST_FILE, "r+", encoding="utf-8") as file:
-            DEVICE_HOST = file.read()
-            logger.info(f"read {DEVICE_HOST_FILE} -> {DEVICE_HOST}")
-            return DEVICE_HOST
+            host = file.read()
+            set_env_device_host(host)
+            logger.info(f"read {DEVICE_HOST_FILE} -> {host}")
+            return host
     except Exception:  # pylint: disable=broad-except
         logger.exception(f"Failed reading device host from {DEVICE_HOST_FILE}")
     return None

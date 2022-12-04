@@ -6,5 +6,5 @@ disable = [
     "missing-docstring",
     "line-too-long",
     "fixme",
-   "logging-fstring-interpolation"
+    "logging-fstring-interpolation"
 ]
