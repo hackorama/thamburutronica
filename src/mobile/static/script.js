@@ -54,6 +54,48 @@ function start() {
     }
     ping();
 }
+function settings() {
+    stat();
+}
+function stat() {
+    return __awaiter(this, void 0, void 0, function () {
+        var system_elem, status, c;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    console.log("Getting system status ...");
+                    system_elem = document.getElementById("system");
+                    if (!system_elem) {
+                        return [2 /*return*/];
+                    }
+                    system_elem.innerHTML = "Checking device   .";
+                    status = null;
+                    fetch("/device/diag")
+                        .then(function (response) { return response.text(); })
+                        .then(function (data) { return status = JSON.parse(data); }) // parse to remove quotes
+                    ["catch"](function (ex) {
+                        status = "error";
+                        console.log("status = %s", status);
+                    });
+                    c = 0;
+                    _a.label = 1;
+                case 1:
+                    if (!!status) return [3 /*break*/, 3];
+                    console.log("status = %s", status);
+                    system_elem.innerHTML = c % 2 ? "Checking device . ." : "Checking device ...";
+                    return [4 /*yield*/, new Promise(function (r) { return setTimeout(r, 1000); })];
+                case 2:
+                    _a.sent();
+                    c++;
+                    return [3 /*break*/, 1];
+                case 3:
+                    console.log("status = %s", status);
+                    system_elem.innerHTML = status;
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function chordClick() {
     if (connected === false) {
         return;

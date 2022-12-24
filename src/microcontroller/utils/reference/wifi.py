@@ -5,10 +5,13 @@ import adafruit_requests as requests
 import board
 import busio
 from adafruit_espatcontrol import adafruit_espatcontrol
+from util import log
 
 
 class Client:
     """
+    NOTE: Only used if the MCU do not have on-board Wi-Fi support.
+
     Connects to specified Wi-Fi SSID using external ESP32 board:
       - Creates an HTTP client
 
@@ -45,7 +48,7 @@ class Client:
         self.__init_esp()
 
     def __init_esp(self):
-        print("Starting wifi module ...")
+        log("Starting wifi module ...")
         self.uart = busio.UART(self.tx_pin, self.rx_pin, receiver_buffer_size=2048)
         self.esp = adafruit_espatcontrol.ESP_ATcontrol(self.uart, 115200, debug=False)
         requests.set_socket(socket, self.esp)
@@ -73,32 +76,32 @@ class Client:
         ):
             try:
                 if self.debug:
-                    print("Scanning wifi access points ...")
-                    for ap in self.esp.scan_APs():
-                        print(f"\t{ap}")
-                print(f"Connecting to wifi ssid {self.secrets['ssid']} ...")
+                    log("Scanning wifi access points ...")
+                    for ap in self.esp.scan_APs():  # pylint: disable=invalid-name
+                        log(f"\t{ap}")
+                log(f"Connecting to wifi ssid {self.secrets['ssid']} ...")
                 self.esp.connect(self.secrets)
-                print(f"Wifi IP {self.esp.local_ip}")
-                print(f"Wifi version: {self.esp.version}")
-                print(f"Wifi connected: {self.esp.is_connected}")
+                log(f"Wifi IP {self.esp.local_ip}")
+                log(f"Wifi version: {self.esp.version}")
+                log(f"Wifi connected: {self.esp.is_connected}")
                 self.not_connected = False
-            except (ValueError, RuntimeError, adafruit_espatcontrol.OKError) as e:
-                print(
-                    f"Failed accessing wifi ssid {self.secrets['ssid']}, retrying {self.wifi_init_max_retries - retry_counter + 1}/{self.wifi_init_max_retries}: ",
-                    e,
+            except (ValueError, RuntimeError, adafruit_espatcontrol.OKError) as error:
+                log(
+                    f"Failed accessing wifi ssid {self.secrets['ssid']}, retrying {self.wifi_init_max_retries - retry_counter + 1}/{self.wifi_init_max_retries}: {error}"
                 )
                 self.wait(self.wifi_init_retry_throttle_duration_secs)
             retry_counter -= 1
-        print(f"Wifi connected: {self.esp.is_connected}")
+        log(f"Wifi connected: {self.esp.is_connected}")
 
     def ping(self, host):
-        print(f"ping {host} ...")
+        log(f"ping {host} ...")
         try:
-            ms = self.esp.ping(host)
-            print(f"Pinged {host} in {ms} ms")
-            return ms
-        except Exception as e:
-            print(f"Failed ping {host}", e)
+            msecs = self.esp.ping(host)
+            log(f"Pinged {host} in {msecs} ms")
+            return msecs
+        except Exception as error:  # pylint: disable=broad-except
+            log(f"Failed ping {host} {error}")
+        return None
 
     def get(self, url):
         retry_counter = self.request_max_retries
@@ -107,36 +110,35 @@ class Client:
             retry_duration_start_sec, self.request_max_retry_duration_secs
         ):
             try:
-                print(f"Connecting to {url} ...")
-                r = requests.get(url, timeout=self.request_connect_timeout_secs)
-                print(f"{url} -> {r.text}")
-                return r.text
-            except Exception as e:
-                print(
-                    f"Failed accessing {url}, retrying {self.request_max_retries - retry_counter + 1}/{self.request_max_retries}: ",
-                    e,
+                log(f"Connecting to {url} ...")
+                response = requests.get(url, timeout=self.request_connect_timeout_secs)
+                log(f"{url} -> {response.text}")
+                return response.text
+            except Exception as error:  # pylint: disable=broad-except
+                log(
+                    f"Failed accessing {url}, retrying {self.request_max_retries - retry_counter + 1}/{self.request_max_retries}: {error}"
                 )
                 self.wait(self.request_retry_throttle_duration_secs)
             retry_counter -= 1
 
     def sleep(self, duration_ms=0):
         if not duration_ms:
-            print("Turning off wifi module, deep sleep")
+            log("Turning off wifi module, deep sleep")
         else:
-            print(f"Turning off wifi module for {duration_ms} ms, deep sleep")
+            log(f"Turning off wifi module for {duration_ms} ms, deep sleep")
         self.esp.deep_sleep(duration_ms)
 
     def reset(self):
-        print("Resetting wifi module ...")
+        log("Resetting wifi module ...")
         self.esp.soft_reset()
 
     def connect(self):
-        print("Connecting wifi module ...")
+        log("Connecting wifi module ...")
         self.__connect_wifi()
 
     @staticmethod
     def device_status():
-        return True if Client.esp else False
+        return bool(Client.esp)
 
     @staticmethod
     def connection_status():
@@ -146,8 +148,10 @@ class Client:
     def device_version():
         if Client.esp:
             return Client.esp.version
+        return None
 
     @staticmethod
     def device_ip():
         if Client.esp:
             return Client.esp.local_ip
+        return None

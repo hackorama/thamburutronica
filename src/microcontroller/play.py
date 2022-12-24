@@ -3,11 +3,13 @@ import time
 from config import CONFIG
 
 
-class Play:
+class Play:  # pylint: disable=too-many-instance-attributes
     """
+    TODO FIXME too-many-instance-attributes : move attributes to common config.CONFIG
+
     Pure python class with music player control logic, no MCU specific imports
 
-    All MCU specific implementation will be in a separate MCU module like Pico class.
+    All MCU specific implementation will be in a separate MCU module like Pico for Pi Pico
 
     This module will get events from the MCU module and process it
     including some state tracking across the event loop ticks
@@ -18,7 +20,6 @@ class Play:
     """
 
     PLAY = "PLAY"
-    BLOCKING_PLAY = "BLOCKING_PLAY"
     STOP = "STOP"
     BEEP = "BEEP"
     LED = "LED"
@@ -27,19 +28,22 @@ class Play:
     WAKE = "WAKE"
 
     play_list_pages = [
-        ["panchamam.mp3", "sarana.mp3", "anusarana.mp3", "manthram.mp3"],
-        ["panchamam.mp3", "sarana.mp3", "anusarana.mp3", "manthram.mp3"],
-        ["spring.mp3", "summer.mp3", "autumn.mp3", "winter.mp3"],
+        ["panchamam.wav", "sarana.wav", "anusarana.wav", "manthram.wav"],
+        ["panchamam.wav", "sarana.wav", "anusarana.wav", "manthram.wav"],
+        ["epic.wav", "oriental.wav", "guitar.wav", "birds.wav"],
     ]
 
     page_led_color = [
-        (0, 200, 0),
-        (0, 0, 200),
-        (200, 0, 0),
+        (22, 159, 255),  # radiant blue
+        (200, 0, 200),  # magenta
+        (255, 164, 0),  # bright orange
     ]
 
+    chime_on_led_color = (0, 200, 0)  # green
+    chime_off_led_color = (200, 0, 0)  # red
+
     sleep_led_color = (0, 0, 0)
-    rickroll_song = "rickroll.mp3"
+    rickroll_song = "rickroll.wav"
 
     def __init__(self, debug=False, trace=False):
 
@@ -55,19 +59,17 @@ class Play:
         self.debug = debug
         self.trace = trace
 
-        self.audio_beep_freq = CONFIG.BEEP_FREQ
-
-        self.audio_gain_default = CONFIG.GAIN_DEFAULT
+        self.audio_gain_default = CONFIG.AUDIO_GAIN_DEFAULT_DB
         self.audio_gain_current = self.audio_gain_default
         self.audio_gain_min = 0
-        self.audio_gain_max = CONFIG.GAIN_MAX
-        self.audio_gain_step = 2
+        self.audio_gain_max = CONFIG.AUDIO_GAIN_MAX_DB
+        self.audio_gain_step = CONFIG.AUDIO_GAIN_STEP_DB
 
         self.audio_up_button = 7
         self.audio_down_button = 8
 
         self.chime_mode_button = 9
-        self.chime_mode = True
+        self.chime_on = CONFIG.CHIME_ON
 
         self.max_buttons = CONFIG.TOUCH_BUTTON_COUNT  # max buttons supported by board
         self.last_button_click = -1
@@ -88,7 +90,6 @@ class Play:
 
         self.sleeping = False
         self.last_activity_at_secs = time.monotonic()
-        self.sleep_on_no_activity_for_secs = 60
 
         self.valid_config = self.__assert_configuration()
 
@@ -199,7 +200,7 @@ class Play:
             return True
         return False
 
-    def __chime_mode_clicked(self, current_clicks, current_click):
+    def __chime_mode_clicked(self, current_click):
         return current_click == self.chime_mode_button
 
     def __rickroll(self):
@@ -257,27 +258,34 @@ class Play:
     def __ready_to_sleep(self):
         return (
             time.monotonic() - self.last_activity_at_secs
-            > self.sleep_on_no_activity_for_secs
+            > CONFIG.SLEEP_ON_INACTIVITY_FOR_SECS
         )
 
     def __going_to_sleep(self, actions):
-        return not actions and not self.sleeping and self.__ready_to_sleep()
+        sleep = not actions and not self.sleeping and self.__ready_to_sleep()
+        if sleep:
+            self.sleeping = True
+        return sleep
 
     def __waking_up(self, actions):
         if actions:
             self.last_activity_at_secs = time.monotonic()
-        return actions and self.sleeping
+        woke = actions and self.sleeping
+        if woke:
+            self.sleeping = False
+        return woke
 
-    def process_clicks(self, touches, clicks):
+    def page_led(self, page=None):
+        if page and 0 < page < len(self.page_led_color):
+            return self.page_led_color[page]
+        return self.page_led_color[self.__page_current]
+
+    # TODO Modularise using a state machine approach
+    def process_clicks(
+        self, touches
+    ):  # pylint: disable=too-many-branches, too-many-statements
 
         assert len(touches) <= self.max_buttons  # TODO FIXME change to == check
-        assert len(clicks) == len(self.clicks_to_touches_map)
-
-        # button clicks has precedence over touch.
-        # override touches with click status using click to touch mapping
-        for i, click in enumerate(clicks):
-            if click:
-                touches[self.clicks_to_touches_map[i]] = True
 
         current_button_clicks = []
         current_button_click = None
@@ -300,36 +308,39 @@ class Play:
         # control buttons have preference over play buttons so check them first
         if self.__volume_clicked(current_button_clicks, current_button_click):
             actions.append({self.GAIN: [self.audio_gain_current]})
-            actions.append({self.BEEP: self.audio_beep_freq})
+            actions.append({self.BEEP: None})
         elif self.__page_clicked(current_button_clicks, current_button_click):
             actions.append({self.STOP: None})
-            actions.append({self.BEEP: self.audio_beep_freq})
+            actions.append({self.BEEP: None})
             actions.append({self.LED: self.page_led_color[self.__page_current]})
-        elif self.__chime_mode_clicked(current_button_clicks, current_button_click):
-            if self.chime_mode:
-                self.chime_mode = False
-                actions.append({self.BEEP: None})
-                actions.append({self.BEEP: None})
+        elif self.__chime_mode_clicked(current_button_click):
+            actions.append({self.BEEP: None})
+            if self.chime_on:
+                self.chime_on = False
+                actions.append({self.LED: self.chime_off_led_color})
             else:
-                self.chime_mode = True
-                actions.append({self.BEEP: None})
+                self.chime_on = True
+                actions.append({self.LED: self.chime_on_led_color})
         elif self.__stop_clicked(current_button_click):
             actions.append({self.STOP: None})
+            actions.append({self.LED: self.sleep_led_color})
             self.__reset_last_play_button_click()
         elif self.__play_clicked(current_button_click):  # do not restart
             play_song = self.play_list_pages[self.__page_current][current_button_click]
             if self.__rickroll():
                 play_song = self.rickroll_song
+            # Default static led when flair mode is disabled
+            actions.append({self.LED: self.page_led_color[self.__page_current]})
             actions.append({self.PLAY: play_song})
             self.last_play_button_click = current_button_click
 
         if self.__going_to_sleep(actions):
-            self.sleeping = True
             actions.append({self.LED: self.sleep_led_color})
             actions.append({self.SLEEP: None})
         elif self.__waking_up(actions):
-            self.sleeping = False
-            actions.append({self.LED: self.page_led_color[self.__page_current]})
+            # TODO: Optimise: skip LED restore action if there is already an LED action
+            # Insert in front and not append since wake up actions should be before other actions
+            actions.insert(0, {self.LED: self.page_led_color[self.__page_current]})
             actions.insert(0, {self.WAKE: None})  # wake up should be first action
 
         if self.__valid_control_click(current_button_clicks):
@@ -347,9 +358,6 @@ class Play:
 
     def is_play(self, action):
         return self.__is_action(action, self.PLAY)
-
-    def is_blocking_play(self, action):
-        return self.__is_action(action, self.BLOCKING_PLAY)
 
     def is_stop(self, action):
         return self.__is_action(action, self.STOP)
@@ -374,48 +382,34 @@ class Play:
         return list(action.values())[0]
 
     def get_files(self):
-        return sum(
-            self.play_list_pages, [self.rickroll_song, CONFIG.CHIME_AMBIENT_AUDIO]
-        )
+        return sum(self.play_list_pages, [self.rickroll_song, CONFIG.CHIME_AUDIO_FILE])
 
     def get_chime_actions(self, chimes):
         actions = []
-        if not self.chime_mode:
+        if not self.chime_on:
             return actions
-        if CONFIG.CHIME_MODE == CONFIG.CHIME_MODE_SIMPLE:
-            actions = [{self.PLAY: CONFIG.CHIME_AMBIENT_AUDIO}]
-        else:
-            min_ambient_gain = int(self.audio_gain_max / 4)
-            ambient_gain = int(self.audio_gain_current / 2)
-            if ambient_gain < min_ambient_gain:
-                ambient_gain = min_ambient_gain
-            actions = [
-                {self.GAIN: [ambient_gain]},  # lower gain on primary channel ambient
-                {self.PLAY: CONFIG.CHIME_AMBIENT_AUDIO},  # primary channel ambient
-                # secondary channel blocking play multiple chime bells
-                {
-                    self.BLOCKING_PLAY: [
-                        CONFIG.CHIME_BELL_AUDIO,
-                        CONFIG.CHIME_BELL_AUDIO_CHANNEL,
-                        chimes,
-                    ]
-                },
-                {self.GAIN: [self.audio_gain_current]},  # reset primary channel gain
-            ]
-        if self.sleeping:  # wake up and go back to sleep for chime actions
+        print(f"Playing {chimes} chimes")
+        actions = [
+            {self.LED: CONFIG.CHIME_LED},
+            {self.PLAY: CONFIG.CHIME_AUDIO_FILE},
+        ]
+        if self.__waking_up(actions):  # if sleeping wake up before chime actions
             actions.insert(0, {self.WAKE: None})  # first action
-            actions.append({self.SLEEP: None})  # last action
         return actions
 
     def process_web_click(self, web_click):
         # web click is not zero indexed, zero is used for stop play
-        action = {}
+        actions = {}
         if web_click == 0:
-            action = {self.STOP: None}
+            actions = [{self.STOP: None}, {self.LED: self.sleep_led_color}]
         elif web_click is not None and self.__valid_play_click(web_click - 1):
             play_song = self.play_list_pages[self.web_play_page][web_click - 1]
-            action = {self.PLAY: play_song}
-        return action
+            # Default static led when flair mode is disabled
+            actions = [
+                {self.LED: self.page_led_color[self.web_play_page]},
+                {self.PLAY: play_song},
+            ]
+        return actions
 
     def __debug(self, current_clicks, result):
         if not self.debug:

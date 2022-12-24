@@ -14,15 +14,32 @@ Sub modules - [Web](./web.py), [Chime](./chime.py), [Flair](./flair.py)
 
 CircuitPython entry point [code.py](./code.py)
 
-## Deploying
+## Build
+
+```shell
+$ make help
+help:        Show help
+deps:        Install dev python packages
+device:      Install circuitpython packages on device
+check:       Run python code checks
+compile:     Build mpy files
+deploy:      Deploy mpy files to device
+```
+
+## Deploy
 
 - [Boot Pi Pico W to CircuitPython 8.x](./docs/installing-circuitpython.md)
 - [Install the required CircuitPython libraries](./docs/lib-dependencies.md)
-- Copy the `*.py` code to Pi Pico W using USB
+- Copy the `*.py` or `*.mpy` code to USB mounted Pi Pico W - `make deploy`
 
 > On macOS the CircuitPython USB mount point will be `/Volumes/CIRCUITPY`
 
 ## Hardware
+
+![Microcontroller circuit hookup diagram](./docs/hookup-diagram.png)
+
+[PNG](./docs/hookup-diagram.png) [PDF](./docs/hookup-diagram.pdf) [SVG](./docs/hookup-diagram.svg)
+
 
 | Board                                                                                                    | Chip                                                                                                                                                          | Description                                |
 |----------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|
@@ -32,5 +49,27 @@ CircuitPython entry point [code.py](./code.py)
 | Sparkfun [Qwiic Speaker Amp](https://www.sparkfun.com/products/20690)                                    | Texas Instruments [TPA2016D2](https://www.ti.com/product/TPA2016D2)                                                                                           | Audio amp                                  |
 | Cytron [Maker Pi Pico Base](https://www.cytron.io/p-maker-pi-pico-base)                                  |                                                                                                                                                               | Base for micro SD card slot and audio jack |
 
-Programmed using [CircuitPython](https://circuitpython.org/board/raspberry_pi_pico/) 8
+Programmed using [CircuitPython 8](https://circuitpython.org/board/raspberry_pi_pico/)
+
+## Memory handling notes
+
+As new features were added (Wi-Fi, clock chimes etc.) had to make some changes to fit everything into the microcontroller memory.
+
+Pi Pico W has only `264kB` RAM and `2MB` Flash storage.
+
+- Removed non-essential features saving module import memory use
+  - Logging with logging file handler, switched to simple console prints
+  - Debug use of on-board buttons and neo pixel
+  - Multi channel audio mixer
+- Switch to memory and cpu efficient `wave` files instead of `mp3` files
+  - The space non-efficient `wave` files are on the external SD card
+- Late import of modules, aggressive periodic gc collection 
+- Prefer bools/ints over strings, no object allocations in the event loop
+- Compile to memory efficient `.mpy` files when deploying
+- Audio LED visual effects made optional to reduce system load
+
+On top of memory constrain issues the system load caused audio playback quality issues.
+The system load was affected by simultaneous processing of writing log files 
+to the same SD card from where audio was being read and at the same time doing 
+audio LED visual effects as well.
 

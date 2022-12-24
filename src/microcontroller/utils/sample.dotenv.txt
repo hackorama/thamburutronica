@@ -1,0 +1,5 @@
+# Copy to MCU root as .env /Volumes/CIRCUITPY/.env
+WIFI_SSID = 'example'
+WIFI_PASSWORD = 'example'
+APP_API_SERVER = '192.168.X.Y'
+TZ_OFFSET = '-8'

@@ -1,0 +1,510 @@
+Thamburutronica 0.2.0
+2022-12-23T21:26:30 Thamburutronica 0.2.0
+2022-12-23T21:26:30 Log file /sd/log.txt is not ready
+2022-12-23T21:26:30 MEM Bytes: 159488 available, 72432 45% used, 87056 54% free (1712 1% change)
+2022-12-23T21:26:30 Log file /sd/log.txt is not ready
+2022-12-23T21:26:30 MEM Bytes: 159488 available, 72752 45% used, 86736 54% free (1104 1% change)
+2022-12-23T21:26:30 Log file /sd/log.txt is not ready
+2022-12-23T21:26:31 MEM Bytes: 159488 available, 109872 68% used, 49616 31% free (0 0% change)
+2022-12-23T21:26:31 Log file /sd/log.txt is ready
+2022-12-23T21:26:31 CPU: 125.0 MHz, 3.3 V, 31.3517 °C
+2022-12-23T21:26:31 OS: Raspberry Pi Pico W with rp2040 rp2040 CircuitPython 8.0.0-beta.4 on 2022-10-30
+2022-12-23T21:26:31 MEM Bytes: 264000 SRAM: 159488 60% available, 73808 46% used, 85680 53% free
+2022-12-23T21:26:31 Disk / MB: 0.478516 total, 0.0961914 20% free
+2022-12-23T21:26:31 Disk /sd MB: 30417.6 total, 30405.0 99% free
+2022-12-23T21:26:31 MEM Bytes: 159488 available, 110000 68% used, 49488 31% free (5664 11% change)
+2022-12-23T21:26:32 MEM Bytes: 159488 available, 139120 87% used, 20368 12% free (352 1% change)
+2022-12-23T21:26:32 Connecting to hackorama ...
+2022-12-23T21:26:32 Connected to hackorama with IP 192.168.1.231
+2022-12-23T21:26:32 MEM Bytes: 159488 available, 139136 87% used, 20352 12% free (2400 11% change)
+2022-12-23T21:26:32 Starting server on 192.168.1.231 ...
+2022-12-23T21:26:32 Listening on http://192.168.1.231:80
+2022-12-23T21:26:32 MEM Bytes: 159488 available, 140352 88% used, 19136 11% free (2560 13% change)
+2022-12-23T21:26:32 Trying NTP sync 1/3 ...
+2022-12-24T05:26:33 MEM Bytes: 159488 available, 139040 87% used, 20448 12% free (1680 8% change)
+2022-12-24T05:26:33 MEM Bytes: 159488 available, 139040 87% used, 20448 12% free (2176 10% change)
+2022-12-24T05:26:33 Starting event loop at tick rate 0.2 secs
+2022-12-24T05:26:33 GET http://192.168.1.163/device/register/192.168.1.231 ...
+2022-12-24T05:26:34 GET http://192.168.1.163/device/register/192.168.1.231 -> "192.168.1.231 ok"
+2022-12-24T05:26:34 Device 192.168.1.231 registered on 192.168.1.163
+2022-12-24T05:26:34 STOP
+2022-12-24T05:26:34 MEM Bytes: 159488 available, 139376 87% used, 20112 12% free (11520 57% change)
+2022-12-24T05:26:34 CPU: 125.0 MHz, 3.3 V, 31.3517 °C
+2022-12-24T05:27:25 Received app ping
+2022-12-24T05:27:33 LED (0, 0, 0)
+2022-12-24T05:27:33 SLEEP
+2022-12-24T05:27:33 MEM Bytes: 159488 available, 139392 87% used, 20096 12% free (11344 56% change)
+2022-12-24T05:27:33 CPU: 125.0 MHz, 3.3 V, 31.8198 °C
+2022-12-24T05:27:42 Received app ping
+2022-12-24T05:27:50 Received app ping
+2022-12-24T05:28:29 Exiting event loop and shutting down Thamburutronica
+
+Thamburutronica 0.2.0
+2022-12-24T20:05:41 MEM Bytes: 159104 available, 72464 45% used, 86640 54% free (880 1% change)
+2022-12-24T20:05:41 Log file /sd/log.txt is not ready
+2022-12-24T20:05:41 MEM Bytes: 159104 available, 72800 45% used, 86304 54% free (1120 1% change)
+2022-12-24T20:05:41 Log file /sd/log.txt is not ready
+2022-12-24T20:05:42 MEM Bytes: 159104 available, 109888 69% used, 49216 30% free (0 0% change)
+2022-12-24T20:05:42 Log file /sd/log.txt is ready
+2022-12-24T20:05:42 CPU: 125.0 MHz, 3.3 V, 32.7561 °C
+2022-12-24T20:05:42 OS: Raspberry Pi Pico W with rp2040 rp2040 CircuitPython 8.0.0-beta.4 on 2022-10-30
+2022-12-24T20:05:42 MEM Bytes: 264000 SRAM: 159104 60% available, 73024 45% used, 86080 54% free
+2022-12-24T20:05:42 Disk / MB: 0.478516 total, 0.09375 19% free
+2022-12-24T20:05:42 Disk /sd MB: 30424.5 total, 29894.4 98% free
+2022-12-24T20:05:42 MEM Bytes: 159104 available, 110016 69% used, 49088 30% free (5632 11% change)
+2022-12-24T20:05:42 Connecting to hackorama ...
+2022-12-24T20:05:43 Connected to hackorama with IP 192.168.1.229
+2022-12-24T20:05:43 Starting server on 192.168.1.229 ...
+2022-12-24T20:05:43 Listening on http://192.168.1.229:80
+2022-12-24T20:05:43 Trying NTP sync 1/3 ...
+2022-12-24T21:05:45 MEM Bytes: 159104 available, 137744 86% used, 21360 13% free (1648 7% change)
+2022-12-24T21:05:45 MEM Bytes: 159104 available, 137760 86% used, 21344 13% free (3984 18% change)
+2022-12-24T21:05:45 Starting event loop at tick rate 0.2 secs
+2022-12-24T21:05:45 GET http://192.168.1.163/device/register/192.168.1.229 ...
+2022-12-24T21:05:47 GET http://192.168.1.163/device/register/192.168.1.229 -> "192.168.1.229 ok"
+2022-12-24T21:05:47 Device 192.168.1.229 registered on 192.168.1.163
+2022-12-24T21:05:47 STOP
+2022-12-24T21:05:47 MEM Bytes: 159104 available, 138032 86% used, 21072 13% free (11904 56% change)
+2022-12-24T21:05:47 CPU: 125.0 MHz, 3.3 V, 32.7561 °C
+2022-12-24T21:06:17 PLAY panchamam.mp3
+2022-12-24T21:06:17 Playing: /sd/panchamam.mp3 0/1
+2022-12-24T21:06:17 MEM Bytes: 159104 available, 140352 88% used, 18752 11% free (11712 62% change)
+2022-12-24T21:06:17 CPU: 125.0 MHz, 3.3 V, 32.7561 °C
+2022-12-24T21:06:17 LED (42, 179, 255) ...
+2022-12-24T21:06:18 STOP
+2022-12-24T21:06:18 Stopping audio
+2022-12-24T21:06:18 LED (22, 159, 235)
+2022-12-24T21:06:18 MEM Bytes: 159104 available, 140400 88% used, 18704 11% free (10416 55% change)
+2022-12-24T21:06:18 CPU: 125.0 MHz, 3.3 V, 32.7561 °C
+2022-12-24T21:06:18 LED (22, 159, 255)
+2022-12-24T21:06:20 PAGE 1
+2022-12-24T21:06:20 STOP
+2022-12-24T21:06:20 BEEP 262
+2022-12-24T21:06:20 Playing: beep.mp3 0/1
+2022-12-24T21:06:20 LED (200, 0, 200)
+2022-12-24T21:06:20 MEM Bytes: 159104 available, 140400 88% used, 18704 11% free (9712 51% change)
+2022-12-24T21:06:20 CPU: 125.0 MHz, 3.3 V, 32.2879 °C
+2022-12-24T21:06:22 PLAY panchamam.mp3
+2022-12-24T21:06:22 Playing: /sd/panchamam.mp3 0/1
+2022-12-24T21:06:22 MEM Bytes: 159104 available, 140336 88% used, 18768 11% free (10400 55% change)
+2022-12-24T21:06:22 CPU: 125.0 MHz, 3.3 V, 32.2879 °C
+2022-12-24T21:06:22 LED (220, 0, 220) ...
+2022-12-24T21:06:23 STOP
+2022-12-24T21:06:23 Stopping audio
+2022-12-24T21:06:23 LED (195, 0, 160)
+2022-12-24T21:06:23 MEM Bytes: 159104 available, 140400 88% used, 18704 11% free (5760 30% change)
+2022-12-24T21:06:23 CPU: 125.0 MHz, 3.3 V, 32.2879 °C
+2022-12-24T21:06:23 LED (200, 0, 200)
+2022-12-24T21:06:26 PAGE 2
+2022-12-24T21:06:26 STOP
+2022-12-24T21:06:26 BEEP 262
+2022-12-24T21:06:26 Playing: beep.mp3 0/1
+2022-12-24T21:06:26 LED (255, 164, 0)
+2022-12-24T21:06:26 MEM Bytes: 159104 available, 140400 88% used, 18704 11% free (12768 68% change)
+2022-12-24T21:06:26 CPU: 125.0 MHz, 3.3 V, 32.2879 °C
+2022-12-24T21:06:28 PLAY birds.mp3
+2022-12-24T21:06:28 Playing: /sd/birds.mp3 0/1
+2022-12-24T21:06:28 MEM Bytes: 159104 available, 140336 88% used, 18768 11% free (13216 70% change)
+2022-12-24T21:06:28 CPU: 125.0 MHz, 3.3 V, 32.2879 °C
+2022-12-24T21:06:28 LED (255, 144, 0) ...
+2022-12-24T21:06:38 STOP
+2022-12-24T21:06:38 Stopping audio
+2022-12-24T21:06:38 LED (235, 161, 0)
+2022-12-24T21:06:38 MEM Bytes: 159104 available, 140400 88% used, 18704 11% free (17808 95% change)
+2022-12-24T21:06:38 CPU: 125.0 MHz, 3.3 V, 32.7561 °C
+2022-12-24T21:06:38 LED (255, 164, 0)
+2022-12-24T21:06:39 PLAY epic.mp3
+2022-12-24T21:06:39 Playing: /sd/epic.mp3 0/1
+2022-12-24T21:06:39 MEM Bytes: 159104 available, 140336 88% used, 18768 11% free (5184 27% change)
+2022-12-24T21:06:39 CPU: 125.0 MHz, 3.3 V, 32.2879 °C
+2022-12-24T21:06:39 LED (255, 144, 0) ...
+2022-12-24T21:06:44 STOP
+2022-12-24T21:06:44 Stopping audio
+2022-12-24T21:06:44 LED (135, 61, 0)
+2022-12-24T21:06:44 MEM Bytes: 159104 available, 140400 88% used, 18704 11% free (3008 16% change)
+2022-12-24T21:06:44 CPU: 125.0 MHz, 3.3 V, 32.7561 °C
+2022-12-24T21:06:44 LED (255, 164, 0)
+2022-12-24T21:06:46 PLAY guitar.mp3
+2022-12-24T21:06:46 Playing: /sd/guitar.mp3 0/1
+2022-12-24T21:06:46 MEM Bytes: 159104 available, 140336 88% used, 18768 11% free (8256 43% change)
+2022-12-24T21:06:46 CPU: 125.0 MHz, 3.3 V, 32.2879 °C
+2022-12-24T21:06:46 LED (255, 144, 0) ...
+2022-12-24T21:06:49 STOP
+2022-12-24T21:06:49 Stopping audio
+2022-12-24T21:06:49 LED (235, 121, 0)
+2022-12-24T21:06:49 MEM Bytes: 159104 available, 140400 88% used, 18704 11% free (9408 50% change)
+2022-12-24T21:06:50 CPU: 125.0 MHz, 3.3 V, 32.7561 °C
+2022-12-24T21:06:50 LED (255, 164, 0)
+2022-12-24T21:06:51 PLAY oriental.mp3
+2022-12-24T21:06:51 Playing: /sd/oriental.mp3 0/1
+2022-12-24T21:06:51 MEM Bytes: 159104 available, 140352 88% used, 18752 11% free (8464 45% change)
+2022-12-24T21:06:51 CPU: 125.0 MHz, 3.3 V, 32.7561 °C
+2022-12-24T21:06:51 LED (255, 144, 0) ...
+2022-12-24T21:06:55 STOP
+2022-12-24T21:06:55 Stopping audio
+2022-12-24T21:06:55 LED (135, 21, 0)
+2022-12-24T21:06:56 MEM Bytes: 159104 available, 140400 88% used, 18704 11% free (7728 41% change)
+2022-12-24T21:06:56 CPU: 125.0 MHz, 3.3 V, 32.7561 °C
+2022-12-24T21:06:56 LED (255, 164, 0)
+2022-12-24T21:07:42 Received app ping
+2022-12-24T21:07:47 PLAY manthram.mp3
+2022-12-24T21:07:47 Playing: /sd/manthram.mp3 0/1
+2022-12-24T21:07:47 MEM Bytes: 159104 available, 140336 88% used, 18768 11% free (17248 91% change)
+2022-12-24T21:07:47 CPU: 125.0 MHz, 3.3 V, 32.7561 °C
+2022-12-24T21:07:47 LED (255, 144, 0) ...
+2022-12-24T21:07:49 STOP
+2022-12-24T21:07:49 Stopping audio
+2022-12-24T21:07:49 LED (95, 21, 0)
+2022-12-24T21:07:49 MEM Bytes: 159104 available, 140400 88% used, 18704 11% free (16720 89% change)
+2022-12-24T21:07:49 CPU: 125.0 MHz, 3.3 V, 33.2242 °C
+2022-12-24T21:07:49 LED (255, 164, 0)
+2022-12-24T21:07:55 LED (0, 0, 0)
+2022-12-24T21:07:55 SLEEP
+2022-12-24T21:07:56 MEM Bytes: 159104 available, 140368 88% used, 18736 11% free (11968 63% change)
+2022-12-24T21:07:56 CPU: 125.0 MHz, 3.3 V, 33.2242 °C
+2022-12-24T21:07:59 WAKE
+2022-12-24T21:07:59 GAIN [14]
+2022-12-24T21:07:59 BEEP 262
+2022-12-24T21:07:59 Playing: beep.mp3 0/1
+2022-12-24T21:07:59 LED (255, 164, 0)
+2022-12-24T21:07:59 MEM Bytes: 159104 available, 140464 88% used, 18640 11% free (3200 17% change)
+2022-12-24T21:07:59 CPU: 125.0 MHz, 3.3 V, 32.7561 °C
+2022-12-24T21:08:02 GAIN [16]
+2022-12-24T21:08:02 BEEP 262
+2022-12-24T21:08:02 Playing: beep.mp3 0/1
+2022-12-24T21:08:02 MEM Bytes: 159104 available, 140400 88% used, 18704 11% free (10768 57% change)
+2022-12-24T21:08:02 CPU: 125.0 MHz, 3.3 V, 33.2242 °C
+2022-12-24T21:08:10 CHIME True
+2022-12-24T21:08:10 LED (200, 0, 0)
+2022-12-24T21:08:10 BEEP None
+2022-12-24T21:08:10 Playing: beep.mp3 0/1
+2022-12-24T21:08:11 MEM Bytes: 159104 available, 140368 88% used, 18736 11% free (9808 52% change)
+2022-12-24T21:08:11 CPU: 125.0 MHz, 3.3 V, 32.7561 °C
+2022-12-24T21:08:14 CHIME False
+2022-12-24T21:08:14 LED (0, 200, 0)
+2022-12-24T21:08:15 BEEP None
+2022-12-24T21:08:15 Playing: beep.mp3 0/1
+2022-12-24T21:08:15 MEM Bytes: 159104 available, 140368 88% used, 18736 11% free (11328 60% change)
+2022-12-24T21:08:15 CPU: 125.0 MHz, 3.3 V, 32.7561 °C
+2022-12-24T21:09:15 LED (0, 0, 0)
+2022-12-24T21:09:15 SLEEP
+2022-12-24T21:09:15 MEM Bytes: 159104 available, 140368 88% used, 18736 11% free (1520 8% change)
+2022-12-24T21:09:15 CPU: 125.0 MHz, 3.3 V, 33.6924 °C
+
+---
+
+Thamburutronica 0.2.0
+2022-12-24T16:39:23 MEM Bytes: 159488 available, 71952 45% used, 87536 54% free (1024 1% change)
+2022-12-24T16:39:23 Log file /sd/log.txt is not ready
+2022-12-24T16:39:23 MEM Bytes: 159488 available, 72288 45% used, 87200 54% free (768 0% change)
+2022-12-24T16:39:23 Log file /sd/log.txt is not ready
+2022-12-24T16:39:24 MEM Bytes: 159488 available, 109360 68% used, 50128 31% free (0 0% change)
+2022-12-24T16:39:24 Log file /sd/log.txt is ready
+2022-12-24T16:39:24 CPU: 125.0 MHz, 3.3 V, 31.3517 °C
+2022-12-24T16:39:24 OS: Raspberry Pi Pico W with rp2040 rp2040 CircuitPython 8.0.0-beta.4 on 2022-10-30
+2022-12-24T16:39:24 MEM Bytes: 264000 SRAM: 159488 60% available, 72656 45% used, 86832 54% free
+2022-12-24T16:39:24 Disk / MB: 0.478516 total, 0.0952148 19% free
+2022-12-24T16:39:24 Disk /sd MB: 30424.5 total, 29898.1 98% free
+2022-12-24T16:39:24 MEM Bytes: 159488 available, 109488 68% used, 50000 31% free (5328 10% change)
+2022-12-24T16:39:25 Connecting to hackorama ...
+2022-12-24T16:39:25 Connected to hackorama with IP 192.168.1.229
+2022-12-24T16:39:25 Starting server on 192.168.1.229 ...
+2022-12-24T16:39:25 Listening on http://192.168.1.229:80
+2022-12-24T16:39:25 Trying NTP sync 1/3 ...
+2022-12-24T17:39:27 MEM Bytes: 159488 available, 137136 85% used, 22352 14% free (1904 8% change)
+2022-12-24T17:39:27 MEM Bytes: 159488 available, 137152 85% used, 22336 14% free (3408 15% change)
+2022-12-24T17:39:27 Starting event loop at tick rate 0.2 secs
+2022-12-24T17:39:27 GET http://192.168.1.163/device/register/192.168.1.229 ...
+2022-12-24T17:39:28 GET http://192.168.1.163/device/register/192.168.1.229 -> "192.168.1.229 ok"
+2022-12-24T17:39:28 STOP
+2022-12-24T17:39:28 MEM Bytes: 159488 available, 137456 86% used, 22032 13% free (11056 50% change)
+2022-12-24T17:39:28 CPU: 125.0 MHz, 3.3 V, 33.6924 °C
+2022-12-24T17:39:41 CHIME True
+2022-12-24T17:39:42 LED (200, 0, 0)
+2022-12-24T17:39:42 BEEP None
+2022-12-24T17:39:42 Playing: beep.mp3 0/1
+2022-12-24T17:39:42 MEM Bytes: 159488 available, 139728 87% used, 19760 12% free (4432 22% change)
+2022-12-24T17:39:42 CPU: 125.0 MHz, 3.3 V, 33.6924 °C
+2022-12-24T17:39:42 CHIME False
+2022-12-24T17:39:42 LED (0, 200, 0) ...
+2022-12-24T17:39:42 BEEP None
+2022-12-24T17:39:42 Playing: beep.mp3 0/1
+2022-12-24T17:39:42 MEM Bytes: 159488 available, 139792 87% used, 19696 12% free (7696 39% change)
+2022-12-24T17:39:42 CPU: 125.0 MHz, 3.3 V, 33.2242 °C
+2022-12-24T17:39:42 LED (200, 0, 0)
+2022-12-24T17:39:51 GAIN [14]
+2022-12-24T17:39:52 BEEP 262
+2022-12-24T17:39:52 Playing: beep.mp3 0/1
+2022-12-24T17:39:52 MEM Bytes: 159488 available, 139760 87% used, 19728 12% free (1136 5% change)
+2022-12-24T17:39:52 CPU: 125.0 MHz, 3.3 V, 33.6924 °C
+2022-12-24T17:39:52 LED (220, 0, 0) ...
+2022-12-24T17:39:52 LED (200, 0, 0)
+2022-12-24T17:39:58 GAIN [16]
+2022-12-24T17:39:58 BEEP 262
+2022-12-24T17:39:58 Playing: beep.mp3 0/1
+2022-12-24T17:39:58 MEM Bytes: 159488 available, 139760 87% used, 19728 12% free (6304 31% change)
+2022-12-24T17:39:58 CPU: 125.0 MHz, 3.3 V, 33.6924 °C
+2022-12-24T17:39:58 LED (220, 0, 0) ...
+2022-12-24T17:39:58 LED (200, 0, 0)
+2022-12-24T17:40:41 PAGE 1
+2022-12-24T17:40:41 STOP
+2022-12-24T17:40:41 BEEP 262
+2022-12-24T17:40:41 Playing: beep.mp3 0/1
+2022-12-24T17:40:41 LED (191, 64, 191) ...
+2022-12-24T17:40:41 MEM Bytes: 159488 available, 139760 87% used, 19728 12% free (4688 23% change)
+2022-12-24T17:40:41 CPU: 125.0 MHz, 3.3 V, 33.6924 °C
+2022-12-24T17:40:41 LED (191, 64, 191)
+2022-12-24T17:40:44 PAGE 2
+2022-12-24T17:40:44 STOP
+2022-12-24T17:40:44 BEEP 262
+2022-12-24T17:40:44 Playing: beep.mp3 0/1
+2022-12-24T17:40:44 LED (255, 164, 0) ...
+2022-12-24T17:40:45 MEM Bytes: 159488 available, 139760 87% used, 19728 12% free (1472 7% change)
+2022-12-24T17:40:45 CPU: 125.0 MHz, 3.3 V, 33.6924 °C
+2022-12-24T17:40:45 LED (255, 164, 0)
+2022-12-24T17:40:47 PAGE 0
+2022-12-24T17:40:47 STOP
+2022-12-24T17:40:47 BEEP 262
+2022-12-24T17:40:47 Playing: beep.mp3 0/1
+2022-12-24T17:40:47 LED (22, 159, 255) ...
+2022-12-24T17:40:47 MEM Bytes: 159488 available, 139760 87% used, 19728 12% free (11120 56% change)
+2022-12-24T17:40:47 CPU: 125.0 MHz, 3.3 V, 33.6924 °C
+2022-12-24T17:40:48 LED (22, 159, 255)
+2022-12-24T17:40:51 PAGE 1
+2022-12-24T17:40:51 STOP
+2022-12-24T17:40:51 BEEP 262
+2022-12-24T17:40:51 Playing: beep.mp3 0/1
+2022-12-24T17:40:51 LED (191, 64, 191) ...
+2022-12-24T17:40:51 MEM Bytes: 159488 available, 139760 87% used, 19728 12% free (17264 87% change)
+2022-12-24T17:40:51 CPU: 125.0 MHz, 3.3 V, 33.6924 °C
+2022-12-24T17:40:51 LED (191, 64, 191)
+2022-12-24T17:40:56 PAGE 2
+2022-12-24T17:40:56 STOP
+2022-12-24T17:40:57 BEEP 262
+2022-12-24T17:40:57 Playing: beep.mp3 0/1
+2022-12-24T17:40:57 LED (255, 164, 0) ...
+2022-12-24T17:40:57 MEM Bytes: 159488 available, 139760 87% used, 19728 12% free (608 3% change)
+2022-12-24T17:40:57 CPU: 125.0 MHz, 3.3 V, 33.6924 °C
+2022-12-24T17:40:57 LED (255, 164, 0)
+2022-12-24T17:40:58 PAGE 0
+2022-12-24T17:40:58 STOP
+2022-12-24T17:40:58 BEEP 262
+2022-12-24T17:40:58 Playing: beep.mp3 0/1
+2022-12-24T17:40:58 LED (22, 159, 255) ...
+2022-12-24T17:40:58 MEM Bytes: 159488 available, 139760 87% used, 19728 12% free (8608 43% change)
+2022-12-24T17:40:58 CPU: 125.0 MHz, 3.3 V, 33.6924 °C
+2022-12-24T17:40:58 LED (22, 159, 255)
+2022-12-24T17:40:59 PAGE 1
+2022-12-24T17:40:59 STOP
+2022-12-24T17:40:59 BEEP 262
+2022-12-24T17:40:59 Playing: beep.mp3 0/1
+2022-12-24T17:40:59 LED (191, 64, 191) ...
+2022-12-24T17:41:00 MEM Bytes: 159488 available, 139760 87% used, 19728 12% free (5520 27% change)
+2022-12-24T17:41:00 CPU: 125.0 MHz, 3.3 V, 33.6924 °C
+2022-12-24T17:41:00 LED (191, 64, 191)
+2022-12-24T17:41:01 PLAY panchamam.mp3
+2022-12-24T17:41:01 Playing: /sd/panchamam.mp3 0/1
+2022-12-24T17:41:01 MEM Bytes: 159488 available, 139712 87% used, 19776 12% free (10560 53% change)
+2022-12-24T17:41:01 CPU: 125.0 MHz, 3.3 V, 33.6924 °C
+2022-12-24T17:41:01 LED (211, 84, 211) ...
+2022-12-24T17:41:02 STOP
+2022-12-24T17:41:02 Stopping audio
+2022-12-24T17:41:03 LED (195, 44, 171)
+2022-12-24T17:41:03 MEM Bytes: 159488 available, 139760 87% used, 19728 12% free (7984 40% change)
+2022-12-24T17:41:03 CPU: 125.0 MHz, 3.3 V, 34.1605 °C
+2022-12-24T17:41:03 LED (191, 64, 191)
+2022-12-24T17:41:03 PAGE 2
+2022-12-24T17:41:03 STOP
+2022-12-24T17:41:04 BEEP 262
+2022-12-24T17:41:04 Playing: beep.mp3 0/1
+2022-12-24T17:41:04 LED (255, 164, 0) ...
+2022-12-24T17:41:04 MEM Bytes: 159488 available, 139760 87% used, 19728 12% free (2480 12% change)
+2022-12-24T17:41:04 CPU: 125.0 MHz, 3.3 V, 33.6924 °C
+2022-12-24T17:41:04 LED (255, 164, 0)
+2022-12-24T17:41:05 PAGE 0
+2022-12-24T17:41:05 STOP
+2022-12-24T17:41:05 BEEP 262
+2022-12-24T17:41:05 Playing: beep.mp3 0/1
+2022-12-24T17:41:05 LED (22, 159, 255) ...
+2022-12-24T17:41:05 MEM Bytes: 159488 available, 139760 87% used, 19728 12% free (8608 43% change)
+2022-12-24T17:41:05 CPU: 125.0 MHz, 3.3 V, 33.2242 °C
+2022-12-24T17:41:05 LED (22, 159, 255)
+2022-12-24T17:41:49 Received app ping
+2022-12-24T17:41:52 PLAY manthram.mp3
+2022-12-24T17:41:52 Playing: /sd/manthram.mp3 0/1
+2022-12-24T17:41:52 MEM Bytes: 159488 available, 139696 87% used, 19792 12% free (3408 17% change)
+2022-12-24T17:41:52 CPU: 125.0 MHz, 3.3 V, 33.6924 °C
+2022-12-24T17:41:52 LED (42, 179, 255) ...
+2022-12-24T17:41:53 STOP
+2022-12-24T17:41:53 Stopping audio
+2022-12-24T17:41:53 LED (1, 179, 255)
+2022-12-24T17:41:53 MEM Bytes: 159488 available, 139760 87% used, 19728 12% free (9088 46% change)
+2022-12-24T17:41:54 CPU: 125.0 MHz, 3.3 V, 34.1605 °C
+2022-12-24T17:41:54 LED (22, 159, 255)
+2022-12-24T17:42:05 LED (0, 0, 0)
+2022-12-24T17:42:05 SLEEP
+2022-12-24T17:42:05 MEM Bytes: 159488 available, 139728 87% used, 19760 12% free (11728 59% change)
+2022-12-24T17:42:05 CPU: 125.0 MHz, 3.3 V, 34.1605 °C
+
+---
+
+Thamburu 0.1.0
+Connecting to hackorama ...
+Connected hackorama
+My IP address is 192.168.1.220
+Starting server on 192.168.1.220 ...
+Listening on http://192.168.1.220:80
+ERROR: beep.mp3 not found in /sd
+Starting event loop at tick rate 0.25 secs
+GET http://192.168.1.163/device/register/192.168.1.220 ...
+GET http://192.168.1.163/device/register/192.168.1.220 -> "192.168.1.220 ok"
+STOP
+PLAY anusarana.mp3
+Playing: /sd/anusarana.mp3 0/1
+LED (0, 220, 0)
+LED (0, 240, 0)
+STOP
+Stopping audio
+LED (0, 255, 0)
+LED (0, 200, 0)
+PLAY sarana.mp3
+Playing: /sd/sarana.mp3 0/1
+LED (0, 220, 0)
+STOP
+Stopping audio
+LED (0, 240, 0)
+LED (0, 200, 0)
+PLAY panchamam.mp3
+Playing: /sd/panchamam.mp3 0/1
+STOP
+Stopping audio
+LED (0, 220, 0)
+LED (0, 200, 0)
+PLAY manthram.mp3
+Playing: /sd/manthram.mp3 0/1
+LED (0, 220, 0)
+STOP
+Stopping audio
+LED (0, 240, 0)
+LED (0, 200, 0)
+STOP
+BEEP 262
+Playing: beep.mp3 0/1
+LED (0, 0, 200)
+LED (0, 0, 220)
+LED (0, 0, 200)
+PLAY panchamam.mp3
+Playing: /sd/panchamam.mp3 0/1
+LED (0, 0, 220)
+LED (0, 0, 240)
+LED (0, 0, 255)
+LED (0, 0, 235)
+STOP
+Stopping audio
+LED (0, 0, 215)
+LED (0, 0, 200)
+STOP
+BEEP 262
+Playing: beep.mp3 0/1
+LED (200, 0, 0)
+LED (220, 0, 0)
+LED (200, 0, 0)
+PLAY spring.mp3
+Playing: /sd/spring.mp3 0/1
+LED (220, 0, 0)
+LED (240, 0, 0)
+LED (255, 0, 0)
+LED (235, 0, 0)
+LED (215, 0, 0)
+LED (195, 0, 0)
+LED (175, 0, 0)
+LED (155, 0, 0)
+LED (135, 0, 0)
+LED (115, 0, 0)
+STOP
+Stopping audio
+LED (95, 0, 0)
+LED (200, 0, 0)
+STOP
+BEEP 262
+Playing: beep.mp3 0/1
+LED (0, 200, 0)
+LED (0, 220, 0)
+LED (0, 200, 0)
+PLAY panchamam.mp3
+Playing: /sd/panchamam.mp3 0/1
+LED (0, 220, 0)
+LED (0, 240, 0)
+LED (0, 255, 0)
+LED (0, 235, 0)
+LED (0, 215, 0)
+LED (0, 195, 0)
+LED (0, 175, 0)
+LED (0, 155, 0)
+LED (0, 135, 0)
+LED (0, 115, 0)
+LED (0, 95, 0)
+LED (0, 75, 0)
+STOP
+Stopping audio
+LED (0, 55, 0)
+LED (0, 200, 0)
+LED (0, 0, 0)
+SLEEP
+WAKE
+PLAY manthram.mp3
+Playing: /sd/manthram.mp3 0/1
+LED (0, 200, 0)
+LED (0, 220, 0)
+STOP
+Stopping audio
+LED (0, 240, 0)
+LED (0, 200, 0)
+LED (0, 0, 0)
+SLEEP
+WAKE
+STOP
+BEEP 262
+Playing: beep.mp3 0/1
+LED (0, 0, 200)
+LED (0, 0, 200)
+LED (0, 0, 220)
+LED (0, 0, 200)
+PLAY panchamam.mp3
+Playing: /sd/panchamam.mp3 0/1
+LED (0, 0, 220)
+LED (0, 0, 240)
+LED (0, 0, 255)
+LED (0, 0, 235)
+LED (0, 0, 215)
+LED (0, 0, 195)
+LED (0, 0, 175)
+LED (0, 0, 155)
+LED (0, 0, 135)
+STOP
+Stopping audio
+LED (0, 0, 115)
+LED (0, 0, 200)
+STOP
+BEEP 262
+Playing: beep.mp3 0/1
+LED (200, 0, 0)
+LED (220, 0, 0)
+LED (200, 0, 0)
+PLAY autumn.mp3
+Playing: /sd/autumn.mp3 0/1
+LED (220, 0, 0)
+LED (240, 0, 0)
+LED (255, 0, 0)
+LED (235, 0, 0)
+LED (215, 0, 0)
+LED (195, 0, 0)
+LED (175, 0, 0)
+LED (155, 0, 0)
+LED (135, 0, 0)
+STOP
+Stopping audio
+LED (115, 0, 0)
+LED (200, 0, 0)
+
+

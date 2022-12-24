@@ -1,6 +1,6 @@
 black
 isort
-mypy
 pylint
 import-linter
-types-requests
+mpy-cross
+circup

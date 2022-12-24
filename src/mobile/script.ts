@@ -20,6 +20,36 @@ function start() {
   ping();
 }
 
+function settings(){
+  stat();
+}
+
+async function stat() {
+  console.log("Getting system status ...");
+  let system_elem = document.getElementById("system");
+  if (!system_elem) {
+    return;
+  }
+  system_elem.innerHTML = "Checking device   .";
+  let status = null;
+  fetch("/device/diag")
+    .then(response => response.text())
+    .then(data => status = JSON.parse(data)) // parse to remove quotes
+    .catch(function (ex) {
+      status = "error";
+      console.log("status = %s", status);
+    });
+  let c = 0;
+  while (!status) {
+    console.log("status = %s", status);
+    system_elem.innerHTML = c % 2 ? "Checking device . ." : "Checking device ...";
+    await new Promise((r) => setTimeout(r, 1000));
+    c++;
+  }
+  console.log("status = %s", status);
+  system_elem.innerHTML = status;
+}
+
 function chordClick(this: any) {
   if (connected === false) {
     return;

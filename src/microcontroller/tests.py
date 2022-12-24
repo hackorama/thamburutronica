@@ -4,105 +4,136 @@ from config import CONFIG
 from flair import Flair
 from play import Play
 
+# only for testing not deployed on device disable pylint
+# pylint: disable-all
+# pylint: skip-file
+
+play_conf = Play()
+
+
+def get_audio_file(page, click):
+    return play_conf.play_list_pages[page][click]
+
+
+def get_rickroll_audio_file():
+    return play_conf.rickroll_song
+
+
+def get_led(page):
+    return play_conf.page_led(page)
+
+
 EXPECTED_ACTIONS = [
-    [{"STOP": None}],
-    [{"PLAY": "panchamam.mp3"}],
+    [{"STOP": None}, {"LED": (0, 0, 0)}],
+    [{"LED": play_conf.page_led(0)}, {"PLAY": get_audio_file(0, 0)}],
     [],
-    [{"STOP": None}],
-    [{"PLAY": "sarana.mp3"}],
+    [{"STOP": None}, {"LED": (0, 0, 0)}],
+    [{"LED": play_conf.page_led(0)}, {"PLAY": get_audio_file(0, 1)}],
     [],
-    [{"STOP": None}],
-    [{"PLAY": "sarana.mp3"}],
+    [{"STOP": None}, {"LED": (0, 0, 0)}],
+    [{"LED": play_conf.page_led(0)}, {"PLAY": get_audio_file(0, 1)}],
     [],
-    [{"PLAY": "panchamam.mp3"}],
-    [{"STOP": None}],
-    [],
-    [],
-    [{"PLAY": "anusarana.mp3"}],
-    [],
-    [{"STOP": None}],
-    [{"STOP": None}, {"BEEP": 262}, {"LED": (0, 0, 200)}],
-    [{"PLAY": "anusarana.mp3"}],
-    [],
-    [{"STOP": None}, {"BEEP": 262}, {"LED": (200, 0, 0)}],
-    [{"PLAY": "spring.mp3"}],
-    [{"PLAY": "summer.mp3"}],
-    [{"PLAY": "autumn.mp3"}],
-    [{"PLAY": "winter.mp3"}],
-    [],
-    [{"STOP": None}, {"BEEP": 262}, {"LED": (0, 200, 0)}],
-    [{"PLAY": "sarana.mp3"}],
-    [{"PLAY": "anusarana.mp3"}],
-    [{"PLAY": "manthram.mp3"}],
-    [{"STOP": None}],
-    [{"PLAY": "anusarana.mp3"}],
-    [{"GAIN": [18]}, {"BEEP": 262}],
-    [{"GAIN": [16]}, {"BEEP": 262}],
-    [{"GAIN": [18]}, {"BEEP": 262}],
-    [],
-    [{"GAIN": [16]}, {"BEEP": 262}],
-    [],
-    [{"PLAY": "panchamam.mp3"}],
-    [{"PLAY": "sarana.mp3"}],
-    [{"PLAY": "anusarana.mp3"}],
-    [{"PLAY": "manthram.mp3"}],
-    [{"PLAY": "panchamam.mp3"}],
-    [{"PLAY": "sarana.mp3"}],
-    [{"STOP": None}, {"BEEP": 262}, {"LED": (0, 0, 200)}],
-    [],
-    [{"STOP": None}, {"BEEP": 262}, {"LED": (200, 0, 0)}],
-    [{"PLAY": "spring.mp3"}],
-    [{"PLAY": "summer.mp3"}],
-    [{"PLAY": "rickroll.mp3"}],
-    [{"PLAY": "winter.mp3"}],
-    [{"PLAY": "spring.mp3"}],
-    [{"PLAY": "summer.mp3"}],
-    [{"PLAY": "autumn.mp3"}],
-    [{"PLAY": "winter.mp3"}],
-    [{"PLAY": "rickroll.mp3"}],
-    [{"PLAY": "summer.mp3"}],
-    [],
-    [{"STOP": None}, {"BEEP": 262}, {"LED": (0, 200, 0)}],
+    [{"LED": play_conf.page_led(0)}, {"PLAY": get_audio_file(0, 0)}],
+    [{"STOP": None}, {"LED": (0, 0, 0)}],
     [],
     [],
+    [{"LED": play_conf.page_led(0)}, {"PLAY": get_audio_file(0, 2)}],
     [],
-    [{"STOP": None}, {"BEEP": 262}, {"LED": (0, 0, 200)}],
-    [{"PLAY": "panchamam.mp3"}],
-    [{"STOP": None}, {"BEEP": 262}, {"LED": (200, 0, 0)}],
+    [{"STOP": None}, {"LED": (0, 0, 0)}],
+    [{"STOP": None}, {"BEEP": None}, {"LED": play_conf.page_led(1)}],
+    [{"LED": play_conf.page_led(1)}, {"PLAY": get_audio_file(1, 2)}],
     [],
+    [{"STOP": None}, {"BEEP": None}, {"LED": play_conf.page_led(2)}],
+    [{"LED": play_conf.page_led(2)}, {"PLAY": get_audio_file(2, 0)}],
+    [{"LED": play_conf.page_led(2)}, {"PLAY": get_audio_file(2, 1)}],
+    [{"LED": play_conf.page_led(2)}, {"PLAY": get_audio_file(2, 2)}],
+    [{"LED": play_conf.page_led(2)}, {"PLAY": get_audio_file(2, 3)}],
     [],
+    [{"STOP": None}, {"BEEP": None}, {"LED": play_conf.page_led(0)}],
+    [{"LED": play_conf.page_led(0)}, {"PLAY": get_audio_file(0, 1)}],
+    [{"LED": play_conf.page_led(0)}, {"PLAY": get_audio_file(0, 2)}],
+    [{"LED": play_conf.page_led(0)}, {"PLAY": get_audio_file(0, 3)}],
+    [{"STOP": None}, {"LED": (0, 0, 0)}],
+    [{"LED": play_conf.page_led(0)}, {"PLAY": get_audio_file(0, 2)}],
+    [
+        {"GAIN": [CONFIG.AUDIO_GAIN_DEFAULT_DB + CONFIG.AUDIO_GAIN_STEP_DB]},
+        {"BEEP": None},
+    ],
+    [{"GAIN": [CONFIG.AUDIO_GAIN_DEFAULT_DB]}, {"BEEP": None}],
+    [
+        {"GAIN": [CONFIG.AUDIO_GAIN_DEFAULT_DB + CONFIG.AUDIO_GAIN_STEP_DB]},
+        {"BEEP": None},
+    ],
+    [],
+    [{"GAIN": [CONFIG.AUDIO_GAIN_DEFAULT_DB]}, {"BEEP": None}],
+    [],
+    [{"LED": play_conf.page_led(0)}, {"PLAY": get_audio_file(0, 0)}],
+    [{"LED": play_conf.page_led(0)}, {"PLAY": get_audio_file(0, 1)}],
+    [{"LED": play_conf.page_led(0)}, {"PLAY": get_audio_file(0, 2)}],
+    [{"LED": play_conf.page_led(0)}, {"PLAY": get_audio_file(0, 3)}],
+    [{"LED": play_conf.page_led(0)}, {"PLAY": get_audio_file(0, 0)}],
+    [{"LED": play_conf.page_led(0)}, {"PLAY": get_audio_file(0, 1)}],
+    [{"STOP": None}, {"BEEP": None}, {"LED": play_conf.page_led(1)}],
+    [],
+    [{"STOP": None}, {"BEEP": None}, {"LED": play_conf.page_led(2)}],
+    [{"LED": play_conf.page_led(2)}, {"PLAY": get_audio_file(2, 0)}],
+    [{"LED": play_conf.page_led(2)}, {"PLAY": get_audio_file(2, 1)}],
+    [{"LED": play_conf.page_led(2)}, {"PLAY": get_rickroll_audio_file()}],
+    [{"LED": play_conf.page_led(2)}, {"PLAY": get_audio_file(2, 3)}],
+    [{"LED": play_conf.page_led(2)}, {"PLAY": get_audio_file(2, 0)}],
+    [{"LED": play_conf.page_led(2)}, {"PLAY": get_audio_file(2, 1)}],
+    [{"LED": play_conf.page_led(2)}, {"PLAY": get_audio_file(2, 2)}],
+    [{"LED": play_conf.page_led(2)}, {"PLAY": get_audio_file(2, 3)}],
+    [{"LED": play_conf.page_led(2)}, {"PLAY": get_rickroll_audio_file()}],
+    [{"LED": play_conf.page_led(2)}, {"PLAY": get_audio_file(2, 1)}],
+    [],
+    [{"STOP": None}, {"BEEP": None}, {"LED": play_conf.page_led(0)}],
     [],
     [],
     [],
-    [{"STOP": None}, {"BEEP": 262}, {"LED": (0, 200, 0)}],
-    [{"PLAY": "panchamam.mp3"}],
-    [{"STOP": None}, {"BEEP": 262}, {"LED": (0, 0, 200)}],
-    [],
-    [{"GAIN": [18]}, {"BEEP": 262}],
-    [],
-    [],
-    [{"GAIN": [16]}, {"BEEP": 262}],
-    [],
-    [],
-    [{"GAIN": [14]}, {"BEEP": 262}],
-    [],
-    [{"PLAY": "panchamam.mp3"}],
-    [],
-    [],
-    [{"STOP": None}],
+    [{"STOP": None}, {"BEEP": None}, {"LED": play_conf.page_led(1)}],
+    [{"LED": play_conf.page_led(1)}, {"PLAY": get_audio_file(1, 0)}],
+    [{"STOP": None}, {"BEEP": None}, {"LED": play_conf.page_led(2)}],
     [],
     [],
     [],
-    [{"PLAY": "panchamam.mp3"}],
     [],
     [],
-    [{"STOP": None}, {"BEEP": 262}, {"LED": (200, 0, 0)}],
-    [{"PLAY": "spring.mp3"}],
+    [{"STOP": None}, {"BEEP": None}, {"LED": play_conf.page_led(0)}],
+    [{"LED": play_conf.page_led(0)}, {"PLAY": get_audio_file(0, 0)}],
+    [{"STOP": None}, {"BEEP": None}, {"LED": play_conf.page_led(1)}],
+    [],
+    [
+        {"GAIN": [CONFIG.AUDIO_GAIN_DEFAULT_DB + CONFIG.AUDIO_GAIN_STEP_DB]},
+        {"BEEP": None},
+    ],
+    [],
+    [],
+    [{"GAIN": [CONFIG.AUDIO_GAIN_DEFAULT_DB]}, {"BEEP": None}],
+    [],
+    [],
+    [
+        {"GAIN": [CONFIG.AUDIO_GAIN_DEFAULT_DB - CONFIG.AUDIO_GAIN_STEP_DB]},
+        {"BEEP": None},
+    ],
+    [],
+    [{"LED": play_conf.page_led(1)}, {"PLAY": get_audio_file(1, 0)}],
+    [],
+    [],
+    [{"STOP": None}, {"LED": (0, 0, 0)}],
+    [],
+    [],
+    [],
+    [{"LED": play_conf.page_led(1)}, {"PLAY": get_audio_file(1, 0)}],
+    [],
+    [],
+    [{"STOP": None}, {"BEEP": None}, {"LED": play_conf.page_led(2)}],
+    [{"LED": play_conf.page_led(2)}, {"PLAY": get_audio_file(2, 0)}],
 ]
 
 
 def test_action(play, touches, actions):
-    action = play.process_clicks(touches, [False, False, False])
+    action = play.process_clicks(touches)
     actions.append(action)
 
 
@@ -299,9 +330,7 @@ def test():
         print(f"{i} {action} == {EXPECTED_ACTIONS[i]}")
         assert action == EXPECTED_ACTIONS[i]
 
-    actions = play.process_clicks(
-        [False, False, False, False, True], [False, False, False]
-    )
+    actions = play.process_clicks([False, False, False, False, True])
     for action in actions:
         if play.is_play(action):
             print(f"PLAY {play.get_params(action)}")
@@ -328,17 +357,18 @@ def test_sleep():
 
     touches = []
 
-    action = play.process_clicks(touches, [False, False, False])
-    assert action == [{"STOP": None}]
+    action = play.process_clicks(touches)
+    assert action == [{"STOP": None}, {"LED": (0, 0, 0)}]
 
+    play.chime_on = True
     # before sleep, chime actions will not have wake/sleep
-    assert CONFIG.CHIME_MODE == CONFIG.CHIME_MODE_SIMPLE
     chime_actions = play.get_chime_actions(3)
-    assert len(chime_actions) == 1
-    assert play.is_play(chime_actions[0])
+    assert len(chime_actions) == 2
+    assert play.is_led(chime_actions[0])
+    assert play.is_play(chime_actions[1])
 
     while duration < sleep_threshold:
-        action = play.process_clicks(touches, [False, False, False])
+        action = play.process_clicks(touches)
         duration = time.monotonic() - start
         print(f"{int(duration)} {action}")
         if duration >= sleep_threshold:
@@ -347,28 +377,26 @@ def test_sleep():
             assert action == []
         time.sleep(10)
 
-    # while sleeping, chime action will have wake/sleep
-    chime_actions = play.get_chime_actions(3)
-    assert len(chime_actions) == 3
-    assert play.is_wake(chime_actions[0])
-    assert play.is_play(chime_actions[1])
-    assert play.is_sleep(chime_actions[2])
-
-    action = play.process_clicks(touches, [False, False, False])
+    action = play.process_clicks(touches)
     duration = time.monotonic() - start
     print(f"{int(duration)} {action}")
     assert action == []
 
-    action = play.process_clicks(touches, [False, False, False])
+    action = play.process_clicks(touches)
     duration = time.monotonic() - start
     print(f"{int(duration)} {action}")
     assert action == []
 
     touches = [True]
-    action = play.process_clicks(touches, [False, False, False])
+    action = play.process_clicks(touches)
     duration = time.monotonic() - start
     print(f"{int(duration)} {action}")
-    assert action == [{"WAKE": None}, {"PLAY": "panchamam.mp3"}, {"LED": (0, 200, 0)}]
+    assert action == [
+        {"WAKE": None},
+        {"LED": get_led(0)},
+        {"LED": get_led(0)},
+        {"PLAY": get_audio_file(0, 0)},
+    ]
 
 
 def flair_action(flair, actions, r, g, b, audio, level, speed):
@@ -412,46 +440,37 @@ def test_flair():
 def test_chimes():
     print("Test chime actions ...")
 
-    saved_chime_mode = CONFIG.CHIME_MODE
-
     play = Play()
+    play.chime_on = True
     actions = play.get_chime_actions(3)
-    assert len(actions) == 1
-    assert play.is_play(actions[0])
-
-    CONFIG.CHIME_MODE = CONFIG.CHIME_MODE_MIXER
-    actions = play.get_chime_actions(9)
-    assert play.is_gain(actions[0])
+    print(actions)
+    assert len(actions) == 2
+    assert play.is_led(actions[0])
     assert play.is_play(actions[1])
-    assert play.is_blocking_play(actions[2])
-    assert play.is_gain(actions[3])
-    params = play.get_params(actions[1])
-    assert params == CONFIG.CHIME_AMBIENT_AUDIO
-    params = play.get_params(actions[2])
-    assert params[0] == CONFIG.CHIME_BELL_AUDIO
-    assert params[1] == CONFIG.CHIME_BELL_AUDIO_CHANNEL
-    assert params[2] == 9
 
-    chime_actions = play.get_chime_actions(3)
-    assert len(chime_actions) == 4
+    play.sleeping = True
+    actions = play.get_chime_actions(3)
+    print(actions)
+    assert len(actions) == 3
+    assert play.is_wake(actions[0])
+    assert play.is_led(actions[1])
+    assert play.is_play(actions[2])
+    play.sleeping = False
+
     # turn off chimes
     actions = play.process_clicks(
         [False, False, False, False, False, False, False, False, False, True],
-        [False, False, False],
     )
-    assert actions == [{"BEEP": None}, {"BEEP": None}]
+    assert actions == [{"BEEP": None}, {"LED": play.chime_off_led_color}]
     chime_actions = play.get_chime_actions(3)
     assert len(chime_actions) == 0
     # turn on chimes
     actions = play.process_clicks(
         [False, False, False, False, False, False, False, False, False, True],
-        [False, False, False],
     )
-    assert actions == [{"BEEP": None}]
+    assert actions == [{"BEEP": None}, {"LED": play.chime_on_led_color}]
     chime_actions = play.get_chime_actions(3)
-    assert len(chime_actions) == 4
-
-    CONFIG.CHIME_MODE = saved_chime_mode  # restore mode after tests
+    assert len(chime_actions) == 2
 
 
 if __name__ == "__main__":

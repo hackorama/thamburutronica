@@ -1,0 +1,12 @@
+[tool.isort]
+profile = "black"
+[tool.pylint.'MESSAGES CONTROL']
+max-line-length = 120
+disable = [
+    "import-error", # ignore circuitpython lib import errors on dev system
+    "missing-docstring",
+    "fixme",
+    "broad-except", #  device exceptions can be broad
+    "import-outside-toplevel", # memory constrain use late imports
+    "invalid-name", # using r, g, b and e for exception
+]

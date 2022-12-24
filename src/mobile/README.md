@@ -2,7 +2,10 @@
 
 A mobile web app to control the Thamburatronica device from the phone using the local Wi-Fi network.
 
-![Mobile App](/images/mobile-app.png)
+| Ready                                  | Play                                   | Settings                               |
+|----------------------------------------|----------------------------------------|----------------------------------------|
+| ![Mobile App](../../images/app-1.jpeg) | ![Mobile App](../../images/app-2.jpeg) | ![Mobile App](../../images/app-3.jpeg) |
+
 
 The Pi Pico W microcontroller used on the device comes with Wi-Fi connection and runs a web server.
 But we use that web server only for basic HTTP API calls to control the device.
@@ -30,26 +33,43 @@ This mobile app service is deployed on a separate server like a Raspberry Pi or 
 - And UI chord clicks are proxied/validated and send to the device by mobile app service
 - if app service cannot ping the device an error message is shown on the UI to check device status
 
+## Build
+
+```shell
+$ make help
+help:    Show help
+deps:    Install python packages
+check:   Run python code checks
+build:   Build typescript
+deploy:  Run the server
+```
+
 ## Server
 
 ```shell
-$ ./setup.sh
-
-$ ./server.sh
+$ make deploy
+test -d venv || python3 -m venv venv
+. venv/bin/activate && which python3 && python3 -m pip install --upgrade pip && pip3 -q install -r dev.requirements.txt && mypy --install-types
+/Users/hackorama/thamburutronica/venv/bin/python3
+Requirement already satisfied: pip in ./venv/lib/python3.8/site-packages (22.3.1)
+. venv/bin/activate && isort . &&  black . &&  pylint *.py && mypy *.py
+Skipped 3 files
+All done! ✨ 🍰 ✨
+1 file left unchanged.
+--------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+Success: no issues found in 1 source file
+tsc --strict
+./server.sh
 Server starting ...
-Server started 93142 ...
+Server started 34567 ...
+```
 
+```shell
 $ tail -f server.log
 INFO:     Uvicorn running on http://0.0.0.0:8888 (Press CTRL+C to quit)
 ...
 INFO:     Application startup complete.
-```
-
-```shell
-$ curl http://17.0.0.1/health
-"OK"
-$ curl http://macmini.homelocal.net/health
-"OK"
 ```
 
 Stop the server
@@ -57,4 +77,3 @@ Stop the server
 ```shell
 $ kill `cat run.pid`
 ```
-

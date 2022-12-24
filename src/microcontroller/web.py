@@ -6,18 +6,19 @@ import time
 
 import adafruit_ntp
 import adafruit_requests
-import microcontroller
 import rtc
 import socketpool
+import wifi
+from adafruit_datetime import datetime
 from adafruit_httpserver import HTTPResponse, HTTPServer
 
-import wifi
+import microcontroller
 from config import CONFIG
 
 web = None
 
 
-class Web:
+class Web:  # pylint: disable=too-many-instance-attributes
     """
     - Connects to specified Wi-Fi SSID:
        - Starts an HTTP server
@@ -34,11 +35,13 @@ class Web:
     NOTE: No HTTPS and auth enabled since both the device and server
           are on trusted local 192.168.0.0/16 network.
           Please enable them as required if deploying on external network
+
+    TODO: Using http_server 0.5.4 with limited features and low memory use
+          Switch to newer version with request params support when stable
     """
 
     RESTART_ON_WIFI_ERROR = False
     WIFI_RESTART_WAIT_SECS = 5
-    TZ_OFFSET_PDT = -7
 
     def __init__(self, ssid=None, password=None):
         # Queue filled by POST route handler and drained by get_click()
@@ -46,11 +49,10 @@ class Web:
         self.__device_registered = False
         self.__connected = False
 
-        self.diag_data = None
         self.ssid = ssid or os.getenv(CONFIG.WIFI_SSID_ENV)
         self.password = password or os.getenv(CONFIG.WIFI_PASSWORD_ENV)
         self.server = None
-
+        self.pool = None
         if not self.ssid or not self.password:
             print(
                 f"ERROR: Please export {CONFIG.WIFI_SSID_ENV}, {CONFIG.WIFI_PASSWORD_ENV} using .env file"
@@ -65,20 +67,15 @@ class Web:
                 self.__connected = True
             except Exception as e:
                 if self.pool:
-                    print(f"Failed starting server on ssid {self.ssid}", e)
+                    print(f"ERROR: Failed starting server on ssid {self.ssid}", e)
                 else:
-                    print(f"Failed connecting to ssid {self.ssid}", e)
-
-    def set_diag(self, diag_data):
-        self.diag_data = diag_data
+                    print(f"ERROR: Failed connecting to ssid {self.ssid}", e)
 
     def __init_wifi(self):
         print(f"Connecting to {self.ssid} ...")
         wifi.radio.connect(self.ssid, self.password)
-        print(f"Connected {self.ssid}")
-        print("My MAC addr:", [hex(i) for i in wifi.radio.mac_address])
-        print("My IP address is", wifi.radio.ipv4_address)
-        return socketpool.SocketPool(wifi.radio)  # TODO Check arg
+        print(f"Connected as {wifi.radio.ipv4_address}")
+        return socketpool.SocketPool(wifi.radio)
 
     def __init_server(self):
         http_server = HTTPServer(self.pool)
@@ -87,7 +84,7 @@ class Web:
             http_server.start(str(wifi.radio.ipv4_address))
             print(f"Listening on http://{wifi.radio.ipv4_address}:80")
         except OSError as e:
-            print(f"Failed starting server ...", e)
+            print("WARNING: Failed starting server ...", e)
             if self.RESTART_ON_WIFI_ERROR:
                 print(f"Restarting in {self.WIFI_RESTART_WAIT_SECS} secs ...")
                 time.sleep(self.WIFI_RESTART_WAIT_SECS)
@@ -121,10 +118,12 @@ class Web:
         finally:
             if r:
                 r.close()
+        return None
 
     def get_click(self):
         if self.web_clicks:
             return self.web_clicks.pop()
+        return None
 
     def put_click(self, web_click):
         self.web_clicks.append(web_click)
@@ -137,31 +136,53 @@ class Web:
             )
             return
         url = f"http://{app_server}/device/register/{wifi.radio.ipv4_address}"
-        r = self.get(url)
-        if r and "ok" in r.lower():
-            self.__device_registered = True
+        try:
+            response = self.get(url)
+            if response and "ok" in response.lower():
+                self.__device_registered = True
+                print(f"Device {wifi.radio.ipv4_address} registered on {app_server}")
+            else:
+                print(f"Device registering failed with response = {response}")
+        except Exception as error:
+            print(f"Device registering failed with error {error}")
 
     def get_server(self):
         return self.server
 
-    def get_diag_data(self):
-        return self.diag_data
+    @staticmethod
+    def get_device_metrics():
+        # TODO no-member: check CircuitPython lib stub issue ?
+        mem_used = gc.mem_alloc()  # pylint: disable=no-member
+        mem_free = gc.mem_free()  # pylint: disable=no-member
+        mem_available = mem_used + mem_free
+        mem_used_pct = int((mem_used / mem_available) * 100) if mem_available else 0
+        return mem_used_pct
 
-    def sync_time(self):
-        try:
-            print(time.localtime())
-            ntp = adafruit_ntp.NTP(self.pool, tz_offset=self.TZ_OFFSET_PDT)
-            rtc.RTC().datetime = ntp.datetime
-            print(time.localtime())
-        except Exception as e:
-            print("Failed syncing time", e)
+    def sync_time(self, max_retries=1):
+        retries = max_retries
+        tz_offset = int(os.getenv(CONFIG.NTP_TZ_OFFSET_ENV, "0"))  # defaults to UTC/GM
+        while retries:
+            retries -= 1
+            print(
+                f"Trying NTP sync with {tz_offset} tz offset {max_retries - retries}/{max_retries} ..."
+            )
+            try:
+                ntp = adafruit_ntp.NTP(
+                    self.pool,
+                    tz_offset=tz_offset,
+                    socket_timeout=CONFIG.NTP_TIMEOUT_SECS,
+                )
+                rtc.RTC().datetime = ntp.datetime
+                # if time sync failed time will reset to chip epoch
+                return int(datetime.now().year) > CONFIG.MCU_CHIP_EPOCH_YEAR
+            except Exception as error:  # pylint: disable=broad-except
+                print(f"Failed NTP sync with error {error}")
 
 
 def get_web_instance():
-    # Using a global instance
-    # since HTTPServer routes has to defined outside the class
-    # using server member variable from the Web class
-    global web
+    # Using a global instance since HTTPServer routes has to be defined
+    # outside the class using server member variable from the Web class
+    global web  # pylint: disable=global-statement
     if not web:
         web = Web()
     return web
@@ -172,46 +193,48 @@ server = get_web_instance().get_server()
 
 
 @server.route("/")
-def index(request):
+def index(request):  # pylint: disable=unused-argument
     return HTTPResponse(content_type="text/html", body="thamburu")
 
 
 @server.route("/ping")
-def index(request):
+def ping(request):  # pylint: disable=unused-argument
     print("ping")
     return HTTPResponse(content_type="text/html", body="pong")
 
 
 @server.route("/diag")
-def diag(request):
-    return HTTPResponse(content_type="text/html", body=json.dumps(web.get_diag_data()))
+def diag(request):  # pylint: disable=unused-argument
+    return HTTPResponse(
+        content_type="text/html", body=json.dumps(web.get_device_metrics())
+    )
 
 
 @server.route("/chord/0", "POST")
-def click(request):
+def chord_zero(request):  # pylint: disable=unused-argument
     web.put_click(0)
     return HTTPResponse(content_type="text/html", body="ok")
 
 
 @server.route("/chord/1", "POST")
-def click(request):
+def chord_one(request):  # pylint: disable=unused-argument
     web.put_click(1)
     return HTTPResponse(content_type="text/html", body="ok")
 
 
 @server.route("/chord/2", "POST")
-def click(request):
+def chord_two(request):  # pylint: disable=unused-argument
     web.put_click(2)
     return HTTPResponse(content_type="text/html", body="ok")
 
 
 @server.route("/chord/3", "POST")
-def click(request):
+def chord_three(request):  # pylint: disable=unused-argument
     web.put_click(3)
     return HTTPResponse(content_type="text/html", body="ok")
 
 
 @server.route("/chord/4", "POST")
-def click(request):
+def chord_four(request):  # pylint: disable=unused-argument
     web.put_click(4)
     return HTTPResponse(content_type="text/html", body="ok")

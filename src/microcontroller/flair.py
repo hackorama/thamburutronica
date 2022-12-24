@@ -1,7 +1,7 @@
 from config import CONFIG
 
 
-class Flair:
+class Flair:  # pylint: disable=too-few-public-methods
     """
     Non-functional cosmetic light effects
     """
@@ -41,6 +41,9 @@ class Flair:
         self.animated_b = b
         self.animation_speed = speed
 
+    def __level_effect(self, level=0):
+        print(f"Audio level {level}")  # TODO implement LED level effect
+
     def __breath_effect(self):
         if self.animated_r != 0:
             self.animated_r += self.animation_speed
@@ -68,21 +71,26 @@ class Flair:
                 self.animated_b = 1
                 self.animation_speed = abs(self.animation_speed)
 
-    def process(self, led_r, led_g, led_b, audio_playing, audio_level=0, speed=20):
+    def process(
+        self, led_r, led_g, led_b, audio_playing, audio_level=0, speed=20
+    ):  # pylint: disable=too-many-arguments
         if audio_playing:
             if not self.__led_animated():
                 self.__set_restore_led(led_r, led_g, led_b, speed)
-            self.__breath_effect()
+            if audio_level:
+                self.__level_effect(audio_level)
+            else:
+                self.__breath_effect()
             return {self.LED: (self.animated_r, self.animated_g, self.animated_b)}
-        else:
-            if self.__led_animated():
-                action = {
-                    self.LED: (
-                        self.led_restore_r,
-                        self.led_restore_g,
-                        self.led_restore_b,
-                    )
-                }
-                self.__reset_restore_led(speed)
-                return action
+
+        if self.__led_animated():
+            action = {
+                self.LED: (
+                    self.led_restore_r,
+                    self.led_restore_g,
+                    self.led_restore_b,
+                )
+            }
+            self.__reset_restore_led(speed)
+            return action
         return {}

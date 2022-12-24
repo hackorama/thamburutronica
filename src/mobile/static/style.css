@@ -18,12 +18,9 @@ div {
   text-align: center;
 }
 
-span {
-  position: absolute;
-  display: block;
-  height: 100%;
-  width: 50px;
-  background: gray;
+th, td {
+  font-size: 50px;
+  padding: 15px;
 }
 
 .header {
@@ -50,6 +47,29 @@ span {
   padding-bottom: 40px;
 }
 
+.system {
+  font-size: 40px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.longPadding {
+  padding-bottom: 200px;
+}
+
+.led {
+  height: 40px;
+  width: 40px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+
 .noSelect {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
@@ -72,21 +92,41 @@ span {
 }
 
 .chord1 {
+  position: absolute;
+  display: block;
+  height: 100%;
+  width: 50px;
+  background: gray;
   left: 18%;
   opacity: 0.5;
 }
 
 .chord2 {
+  position: absolute;
+  display: block;
+  height: 100%;
+  width: 50px;
+  background: gray;
   left: 38%;
   opacity: 0.5;
 }
 
 .chord3 {
+  position: absolute;
+  display: block;
+  height: 100%;
+  width: 50px;
+  background: gray;
   left: 58%;
   opacity: 0.5;
 }
 
 .chord4 {
+  position: absolute;
+  display: block;
+  height: 100%;
+  width: 50px;
+  background: gray;
   left: 78%;
   opacity: 0.5;
 }

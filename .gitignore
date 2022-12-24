@@ -6,9 +6,14 @@ venv
 # ide ignores
 .idea
 # app ignores
+*.mpy
 *.log
 *.pid
 secrets.py
 lib
+build
+release
 DEVICE_HOST
 qr-wifi.png
+sd
+deprecated

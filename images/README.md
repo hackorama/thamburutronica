@@ -18,5 +18,7 @@
 
 ![device-3.jpeg](device-3.jpeg)
 
-![mobile-app.png](mobile-app.png)
+![app-1.jpeg](app-1.jpeg)
+![app-2.jpeg](app-2.jpeg)
+![app-3.jpeg](app-3.jpeg)
 

@@ -1,0 +1,8 @@
+adafruit_datetime==0.0.0+auto.0
+adafruit_httpserver==0.5.4
+adafruit_ntp==3.0.8
+adafruit_mpr121==2.1.17
+adafruit_rgbled==1.1.14
+adafruit_sdcard==3.3.16
+adafruit_tpa2016==1.1.13
+adafruit_bus_device==5.2.3

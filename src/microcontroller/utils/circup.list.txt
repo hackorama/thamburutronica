@@ -1,0 +1,10 @@
+Found device at /Volumes/CIRCUITPY, running CircuitPython 8.0.0-beta.4.
+The following modules are out of date or probably need an update.
+Major Updates may include breaking changes. Review before updating.
+MPY Format changes from Circuitpython 6 to 7 require an update.
+
+Module               Version       Latest   Update Reason  
+-------------------- ------------- -------- -------------- 
+adafruit_datetime    0.0.0+auto.0  1.2.3    Major Version  
+adafruit_httpserver  0.5.4         1.0.1    Major Version  
+adafruit_sdcard      3.3.16        3.3.17   Minor Version  
