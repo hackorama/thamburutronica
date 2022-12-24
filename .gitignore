@@ -1,19 +1,17 @@
 # all hidden files except .gitignore
 .*
 !/.gitignore
+!.importlinter
 # python ignores
 venv
-# ide ignores
-.idea
 # app ignores
 *.mpy
 *.log
 *.pid
-secrets.py
-lib
-build
-release
 DEVICE_HOST
 qr-wifi.png
-sd
+secrets.py
+build
 deprecated
+lib
+sd

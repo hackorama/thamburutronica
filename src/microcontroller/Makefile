@@ -15,7 +15,7 @@ device: deps
 
 check:	    ## Run python code checks
 check: deps
-		. venv/bin/activate && isort . &&  black . &&  pylint *.py
+		. venv/bin/activate && isort . &&  black . &&  pylint *.py && cd ../ && lint-imports --config ./microcontroller/.importlinter && cd -
 
 tests:	    ## Run tests
 tests: check

@@ -1,6 +1,6 @@
 black
-isort
-pylint
-import-linter
-mpy-cross
 circup
+import-linter
+isort
+mpy-cross
+pylint

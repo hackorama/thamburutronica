@@ -1,0 +1,39 @@
+[importlinter]
+root_package = microcontroller
+include_external_packages=True
+
+[importlinter:contract:1]
+name=All modules are independent except Manager and Config
+type=independence
+modules=
+    microcontroller.code
+    microcontroller.pico
+    microcontroller.play
+    microcontroller.chime
+    microcontroller.web
+    microcontroller.flair
+
+[importlinter:contract:2]
+name=Only Pico and Web should have device specific package imports
+type=forbidden
+source_modules=
+    microcontroller.code
+    microcontroller.chime
+    microcontroller.flair
+    microcontroller.manager
+    microcontroller.play
+forbidden_modules=
+    adafruit*
+    audio*
+    board
+    bus*
+    sd*
+    storage
+
+[importlinter:contract:3]
+name=Config is configuration only with no imports
+type=forbidden
+source_modules=
+    microcontroller.config
+forbidden_modules=
+    *
