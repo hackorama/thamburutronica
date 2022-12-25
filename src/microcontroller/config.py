@@ -45,6 +45,7 @@ class CONFIG:  # pylint: disable=too-few-public-methods
     SLEEP_ON_INACTIVITY_FOR_SECS = 60
     TOUCH_BUTTON_COUNT = 12
     EVENT_LOOP_SECS = 0.2
+    PERIODIC_MEMORY_SWEEP_SECS = 60 * 5
     SD_MOUNT = "/sd"
 
     CHIME_SPECIAL_DAYS = {

@@ -8,7 +8,7 @@ from pico import Pico
 from play import Play
 
 
-class Manager:  # pylint: disable=too-few-public-methods
+class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attributes
     """
     Implement the event loop checks and orchestrate interaction between modules
 
@@ -30,6 +30,7 @@ class Manager:  # pylint: disable=too-few-public-methods
         self.web_status = None
         self.storage_status = False
         self.web = None
+        self.time_tracker = time.monotonic()
 
         self.memory_sweep()
 
@@ -176,8 +177,14 @@ class Manager:  # pylint: disable=too-few-public-methods
         # On a memory restricted MCU like Pi Pico call the garbage collector early and often
         # Refer: https://learn.adafruit.com/Memory-saving-tips-for-CircuitPython
         if CONFIG.MCU_MEMORY_CONSTRAINED:
+            print("Memory sweep ...")
             gc.collect()
 
     def __safe_memory_sweep(self, actions):
-        if actions and not self.pico.audio_playing():
+        periodic_sweep = False
+        if time.monotonic() - self.time_tracker > CONFIG.PERIODIC_MEMORY_SWEEP_SECS:
+            self.time_tracker = time.monotonic()
+            periodic_sweep = True
+
+        if (actions or periodic_sweep) and not self.pico.audio_playing():
             self.memory_sweep()
