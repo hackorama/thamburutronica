@@ -384,14 +384,14 @@ class Play:  # pylint: disable=too-many-instance-attributes
     def get_files(self):
         return sum(self.play_list_pages, [self.rickroll_song, CONFIG.CHIME_AUDIO_FILE])
 
-    def get_chime_actions(self, chimes):
+    def get_chime_actions(self, chimes, audio_file=CONFIG.CHIME_AUDIO_FILE):
         actions = []
         if not self.chime_on:
             return actions
-        print(f"Playing {chimes} chimes")
+        print(f"Playing {chimes} x {audio_file} chimes")
         actions = [
             {self.LED: CONFIG.CHIME_LED},
-            {self.PLAY: CONFIG.CHIME_AUDIO_FILE},
+            {self.PLAY: audio_file},
         ]
         if self.__waking_up(actions):  # if sleeping wake up before chime actions
             actions.insert(0, {self.WAKE: None})  # first action

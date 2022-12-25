@@ -1,5 +1,6 @@
 import time
 
+from chime import Chime
 from config import CONFIG
 from flair import Flair
 from play import Play
@@ -471,6 +472,19 @@ def test_chimes():
     assert actions == [{"BEEP": None}, {"LED": play.chime_on_led_color}]
     chime_actions = play.get_chime_actions(3)
     assert len(chime_actions) == 2
+
+    print("Test chime special day audio")
+
+    chime = Chime()
+    today = chime.current_day()
+    if today in CONFIG.CHIME_SPECIAL_DAYS:
+        CONFIG.CHIME_SPECIAL_DAYS.pop(today)
+    assert chime.get_chime_audio_file() == CONFIG.CHIME_AUDIO_FILE
+    CONFIG.CHIME_SPECIAL_DAYS[today] = ["1", "2", "3"]
+    assert chime.get_chime_audio_file() == "1"
+    assert chime.get_chime_audio_file() == "2"
+    assert chime.get_chime_audio_file() == "3"
+    assert chime.get_chime_audio_file() == "1"
 
 
 if __name__ == "__main__":

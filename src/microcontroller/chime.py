@@ -14,10 +14,14 @@ class Chime:  # pylint: disable=too-few-public-methods
 
     def __init__(self):
         self.__last_hour = -1
+        self.__special_track_count = 0
 
     @staticmethod
     def __current_hour():
         return int(datetime.now().hour)
+
+    def current_day(self):
+        return f"{int(datetime.now().month)}-{int(datetime.now().day)}"
 
     @staticmethod
     def __chimes(hour):
@@ -45,3 +49,14 @@ class Chime:  # pylint: disable=too-few-public-methods
         if self.__time_synced() and self.__hour_changed() and self.__valid_hours(hour):
             return self.__chimes(hour)
         return None
+
+    def get_chime_audio_file(self):
+        day = self.current_day()
+        special_audio_files = CONFIG.CHIME_SPECIAL_DAYS.get(day)
+        if special_audio_files:
+            selected = self.__special_track_count
+            count = len(special_audio_files)
+            self.__special_track_count = selected + 1 if selected < count - 1 else 0
+            return special_audio_files[selected]
+
+        return CONFIG.CHIME_AUDIO_FILE

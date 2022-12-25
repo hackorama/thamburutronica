@@ -135,7 +135,9 @@ class Manager:  # pylint: disable=too-few-public-methods
         chimes = self.chime.get_chimes()
         # TODO Consider clearing existing actions for chimes
         if chimes:  # extend list of actions
-            actions.extend(self.play.get_chime_actions(chimes))
+            actions.extend(
+                self.play.get_chime_actions(chimes, self.chime.get_chime_audio_file())
+            )
         return actions
 
     def process(self):

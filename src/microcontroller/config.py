@@ -46,3 +46,16 @@ class CONFIG:  # pylint: disable=too-few-public-methods
     TOUCH_BUTTON_COUNT = 12
     EVENT_LOOP_SECS = 0.2
     SD_MOUNT = "/sd"
+
+    CHIME_SPECIAL_DAYS = {
+        #
+        # Key  : MONTH-DAY
+        # Value: list of audio
+        #
+        # The list of audio that will be cycled through as hourly chime
+        # If a single audio is provided then it will be repeated as hourly chime
+        #
+        "1-1": ["als.wav"],
+        "12-25": ["aiam.wav", "dth.wav", "hth.wav", "jttw.wav", "oct.wav", "sn.wav"],
+        "7-4": ["hbd.wav"],
+    }
