@@ -43,8 +43,6 @@ class Pico:  # pylint: disable=too-many-instance-attributes
 
     AMP_CLOCK_PIN = board.GP9  # SCL0 I2C bus 0
     AMP_DATA_PIN = board.GP8  # SDA0 I2C bus 0
-    AMP_INITIAL_GAIN = CONFIG.AUDIO_GAIN_DEFAULT_DB
-    AMP_MAX_GAIN = CONFIG.AUDIO_GAIN_MAX_DB
     AMP_MONO = True  # Enable only Left channel
     AMP_SHUTDOWN_ON_SLEEP = False
 
@@ -55,9 +53,6 @@ class Pico:  # pylint: disable=too-many-instance-attributes
 
     BUTTON_PINS = [board.GP20, board.GP21, board.GP22]
     BUTTON_ACTIVE_LOW_PULL_DOWN = True
-
-    TOUCH_INPUT_RANGE = CONFIG.TOUCH_BUTTON_COUNT
-    TOUCH_SCAN_DELAY_SECS = CONFIG.EVENT_LOOP_SECS
 
     def __init__(self, silent=False, debug=False):
         self.sd_mounted = False
@@ -126,7 +121,7 @@ class Pico:  # pylint: disable=too-many-instance-attributes
             self.amp_tpa = TPA2016(self.amp_i2c)
             if self.AMP_MONO:
                 self.amp_tpa.speaker_enable_r = False
-            self.set_gain(self.AMP_INITIAL_GAIN)
+            self.set_gain(CONFIG.AUDIO_GAIN_DEFAULT_DB)
 
     def __mount_sdcard(self):
         if self.sd_mounted:
@@ -215,8 +210,8 @@ class Pico:  # pylint: disable=too-many-instance-attributes
             self.audio_out.stop()
 
     def get_touches(self):
-        touches = [False] * self.TOUCH_INPUT_RANGE
-        for i in range(self.TOUCH_INPUT_RANGE):
+        touches = [False] * CONFIG.TOUCH_BUTTON_COUNT
+        for i in range(CONFIG.TOUCH_BUTTON_COUNT):
             touches[i] = self.touch_mpr121[i].value
         return touches
 
