@@ -40,10 +40,7 @@ class Web:  # pylint: disable=too-many-instance-attributes
           Switch to newer version with request params support when stable
     """
 
-    RESTART_ON_WIFI_ERROR = False
-    WIFI_RESTART_WAIT_SECS = 5
-
-    def __init__(self, ssid=None, password=None):
+    def __init__(self, ssid=None, password=None, retries=1):
         # Queue filled by POST route handler and drained by get_click()
         self.web_clicks = []
         self.__device_registered = False
@@ -59,37 +56,55 @@ class Web:  # pylint: disable=too-many-instance-attributes
             )
         else:
             try:
-                gc.collect()
-                self.pool = self.__init_wifi()
-                gc.collect()
-                self.server = self.__init_server()
-                gc.collect()
-                self.__connected = True
+                self.pool = self.__init_wifi(retries)
+                if self.pool:
+                    self.server = self.__init_server(retries)
+                if self.server:
+                    self.__connected = True
             except Exception as e:
                 if self.pool:
                     print(f"ERROR: Failed starting server on ssid {self.ssid}", e)
                 else:
                     print(f"ERROR: Failed connecting to ssid {self.ssid}", e)
 
-    def __init_wifi(self):
-        print(f"Connecting to {self.ssid} ...")
-        wifi.radio.connect(self.ssid, self.password)
-        print(f"Connected as {wifi.radio.ipv4_address}")
-        return socketpool.SocketPool(wifi.radio)
+    def __init_wifi(self, max_retries=1):
+        retries = max_retries
+        while retries:
+            retries -= 1
+            gc.collect()  # wi-fi init requires memory
+            print(
+                f"Connecting to {self.ssid} {max_retries - retries}/{max_retries} ..."
+            )
+            try:
+                wifi.radio.connect(self.ssid, self.password)
+                print(f"Connected as {wifi.radio.ipv4_address}")
+                return socketpool.SocketPool(wifi.radio)
+            except Exception as error:
+                print(f"ERROR: Failed starting Wi-Fi on ssid {self.ssid}", error)
 
-    def __init_server(self):
-        http_server = HTTPServer(self.pool)
-        try:
-            print(f"Starting server on {wifi.radio.ipv4_address} ...")
-            http_server.start(str(wifi.radio.ipv4_address))
-            print(f"Listening on http://{wifi.radio.ipv4_address}:80")
-        except OSError as e:
-            print("WARNING: Failed starting server ...", e)
-            if self.RESTART_ON_WIFI_ERROR:
-                print(f"Restarting in {self.WIFI_RESTART_WAIT_SECS} secs ...")
-                time.sleep(self.WIFI_RESTART_WAIT_SECS)
-                microcontroller.reset()
-        return http_server
+    def __init_server(self, max_retries=1):
+        retries = max_retries
+        while retries:
+            retries -= 1
+            gc.collect()  # wi-fi init requires memory
+            try:
+                http_server = HTTPServer(self.pool)
+                print(
+                    f"Starting server on {wifi.radio.ipv4_address} {max_retries - retries}/{max_retries} ..."
+                )
+                http_server.start(str(wifi.radio.ipv4_address))
+                print(f"Server listening on http://{wifi.radio.ipv4_address}:80")
+                return http_server
+            except Exception as error:
+                print(f"ERROR: Failed starting server on ssid {self.ssid}", error)
+                if CONFIG.WIFI_SYSTEM_RESTART_ON_ERROR:
+                    print(
+                        f"Restarting in {CONFIG.WIFI_SYSTEM_RESTART_WAIT_SECS} secs ..."
+                    )
+                    time.sleep(CONFIG.WIFI_SYSTEM_RESTART_WAIT_SECS)
+                    # TODO FIXME rename microcontroller package
+                    microcontroller.reset()  # pylint: disable=no-member
+                del http_server  # gc collection hint
 
     @property
     def device_registered(self):
@@ -184,7 +199,7 @@ def get_web_instance():
     # outside the class using server member variable from the Web class
     global web  # pylint: disable=global-statement
     if not web:
-        web = Web()
+        web = Web(retries=CONFIG.WIFI_MAX_RETRIES)
     return web
 
 

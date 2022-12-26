@@ -10,7 +10,7 @@ from play import Play
 
 class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attributes
     """
-    Implement the event loop checks and orchestrate interaction between modules
+    Implements the event loop checks and orchestrate interaction between modules
 
     Manager polls for events from MCU module Pi Pico W:
       - Touch and click inputs from MCU
@@ -27,8 +27,6 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
     """
 
     def __init__(self):
-        self.web_status = None
-        self.storage_status = False
         self.web = None
         self.time_tracker = time.monotonic()
 
@@ -49,31 +47,33 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
 
         self.memory_sweep()
 
-        try:
-            self.web_status = self.__init_wifi()
-        except Exception as error:
-            print(f"ERROR: Failed in wi-fi with error: {error}")
+        web_status = self.__init_check_wifi()
 
         self.memory_sweep()
 
-        self.storage_status = self.pico.check_storage(self.play.get_files())
+        storage_status = self.pico.check_storage(self.play.get_files())
 
-        if self.storage_status and self.web_status:
+        self.memory_sweep()
+
+        self.__report_system_status(web_status, storage_status)
+
+    def __report_system_status(self, web_status, storage_status):
+        if storage_status and web_status:
             # both storage and wi-fi ok
             self.pico.set_led_rgb(CONFIG.STARTUP_READY_LED)
             self.pico.beep()
             print("Device ready")
             time.sleep(1)
         else:
-            if not self.storage_status and not self.web_status:
+            if not storage_status and not web_status:
                 # both storage and w-fi failed
                 self.pico.set_led_rgb(CONFIG.STARTUP_STORAGE_AND_WIFI_FAIL_LED)
                 print("ERROR: Device not ready, no SD card and no Wi-Fi")
-            elif not self.storage_status:
+            elif not storage_status:
                 # only storage failed
                 self.pico.set_led_rgb(CONFIG.STARTUP_STORAGE_FAIL_LED)
                 print("ERROR: Device not ready, no SD card")
-            elif self.web_status is None:
+            elif web_status is None:
                 # unhandled exception during wi-fi, handled exception will set led
                 self.pico.set_led_rgb(CONFIG.STARTUP_WIFI_UNKNOWN_FAIL_LED)
                 print("ERROR: Device not ready, no Wi-Fi")
@@ -81,6 +81,15 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
             time.sleep(3)
 
         self.memory_sweep()
+
+    def __init_check_wifi(self):
+        # routes defined in Web will get initialised during get_web_instance import
+        # and could fail without wi-fi
+        try:
+            return self.__init_wifi()
+        except Exception as error:
+            print(f"ERROR: Failed in wi-fi with error: {error}")
+        return None
 
     def __init_wifi(self):
         result = True
