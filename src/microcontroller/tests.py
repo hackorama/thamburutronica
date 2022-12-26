@@ -13,11 +13,11 @@ play_conf = Play()
 
 
 def get_audio_file(page, click):
-    return play_conf.play_list_pages[page][click]
+    return CONFIG.PLAY_LIST_BY_MODE[page][click]
 
 
 def get_rickroll_audio_file():
-    return play_conf.rickroll_song
+    return CONFIG.RICKROLL_AUDIO_FILE
 
 
 def get_led(page):
@@ -462,14 +462,14 @@ def test_chimes():
     actions = play.process_clicks(
         [False, False, False, False, False, False, False, False, False, True],
     )
-    assert actions == [{"BEEP": None}, {"LED": play.chime_off_led_color}]
+    assert actions == [{"BEEP": None}, {"LED": CONFIG.CHIME_OFF_LED_COLOR}]
     chime_actions = play.get_chime_actions(3)
     assert len(chime_actions) == 0
     # turn on chimes
     actions = play.process_clicks(
         [False, False, False, False, False, False, False, False, False, True],
     )
-    assert actions == [{"BEEP": None}, {"LED": play.chime_on_led_color}]
+    assert actions == [{"BEEP": None}, {"LED": CONFIG.CHIME_ON_LED_COLOR}]
     chime_actions = play.get_chime_actions(3)
     assert len(chime_actions) == 2
 

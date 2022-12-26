@@ -27,28 +27,10 @@ class Play:  # pylint: disable=too-many-instance-attributes
     SLEEP = "SLEEP"
     WAKE = "WAKE"
 
-    play_list_pages = [
-        ["panchamam.wav", "sarana.wav", "anusarana.wav", "manthram.wav"],
-        ["panchamam.wav", "sarana.wav", "anusarana.wav", "manthram.wav"],
-        ["epic.wav", "oriental.wav", "guitar.wav", "birds.wav"],
-    ]
-
-    page_led_color = [
-        (22, 159, 255),  # radiant blue
-        (200, 0, 200),  # magenta
-        (255, 164, 0),  # bright orange
-    ]
-
-    chime_on_led_color = (0, 200, 0)  # green
-    chime_off_led_color = (200, 0, 0)  # red
-
-    sleep_led_color = (0, 0, 0)
-    rickroll_song = "rickroll.wav"
-
     def __init__(self, debug=False, trace=False):
 
         self.__page_current = 0
-        self.page_size = len(self.play_list_pages[0])
+        self.page_size = len(CONFIG.PLAY_LIST_BY_MODE[0])
         # pages that need key continuously pressed to play, otherwise single click starts playing
         self.momentary_click_mode_pages = [0]
 
@@ -108,13 +90,13 @@ class Play:  # pylint: disable=too-many-instance-attributes
         assert self.audio_up_button < self.max_buttons
         assert self.audio_down_button < self.max_buttons
         # all pages should have same songs count
-        for page_list in self.play_list_pages:
+        for page_list in CONFIG.PLAY_LIST_BY_MODE:
             assert self.page_size == len(page_list)
         # valid page for momentary click mode
         for page_number in self.momentary_click_mode_pages:
             assert page_number < self.page_size
         # led color list should match page count
-        assert len(self.play_list_pages) == len(self.page_led_color)
+        assert len(CONFIG.PLAY_LIST_BY_MODE) == len(CONFIG.MODE_LED_COLOR)
         # rickroll page is valid
         assert self.rickroll_page < self.page_size
 
@@ -130,7 +112,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
         return len(current_clicks) == 1 and self.page_flip_button in current_clicks
 
     def __valid_play_click(self, click):
-        return click is not None and click <= len(self.play_list_pages)
+        return click is not None and click <= len(CONFIG.PLAY_LIST_BY_MODE)
 
     def __valid_control_click(self, clicks):
         return (
@@ -161,7 +143,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
         return not self.__momentary_click_page()
 
     def __page_flip(self):
-        if self.__page_current == len(self.play_list_pages) - 1:
+        if self.__page_current == len(CONFIG.PLAY_LIST_BY_MODE) - 1:
             self.__page_current = 0
         else:
             self.__page_current += 1
@@ -276,9 +258,9 @@ class Play:  # pylint: disable=too-many-instance-attributes
         return woke
 
     def page_led(self, page=None):
-        if page and 0 < page < len(self.page_led_color):
-            return self.page_led_color[page]
-        return self.page_led_color[self.__page_current]
+        if page and 0 < page < len(CONFIG.MODE_LED_COLOR):
+            return CONFIG.MODE_LED_COLOR[page]
+        return CONFIG.MODE_LED_COLOR[self.__page_current]
 
     # TODO Modularise using a state machine approach
     def process_clicks(
@@ -312,35 +294,37 @@ class Play:  # pylint: disable=too-many-instance-attributes
         elif self.__page_clicked(current_button_clicks, current_button_click):
             actions.append({self.STOP: None})
             actions.append({self.BEEP: None})
-            actions.append({self.LED: self.page_led_color[self.__page_current]})
+            actions.append({self.LED: CONFIG.MODE_LED_COLOR[self.__page_current]})
         elif self.__chime_mode_clicked(current_button_click):
             actions.append({self.BEEP: None})
             if self.chime_on:
                 self.chime_on = False
-                actions.append({self.LED: self.chime_off_led_color})
+                actions.append({self.LED: CONFIG.CHIME_OFF_LED_COLOR})
             else:
                 self.chime_on = True
-                actions.append({self.LED: self.chime_on_led_color})
+                actions.append({self.LED: CONFIG.CHIME_ON_LED_COLOR})
         elif self.__stop_clicked(current_button_click):
             actions.append({self.STOP: None})
-            actions.append({self.LED: self.sleep_led_color})
+            actions.append({self.LED: CONFIG.SLEEP_LED_COLOR})
             self.__reset_last_play_button_click()
         elif self.__play_clicked(current_button_click):  # do not restart
-            play_song = self.play_list_pages[self.__page_current][current_button_click]
+            play_song = CONFIG.PLAY_LIST_BY_MODE[self.__page_current][
+                current_button_click
+            ]
             if self.__rickroll():
-                play_song = self.rickroll_song
+                play_song = CONFIG.RICKROLL_AUDIO_FILE
             # Default static led when flair mode is disabled
-            actions.append({self.LED: self.page_led_color[self.__page_current]})
+            actions.append({self.LED: CONFIG.MODE_LED_COLOR[self.__page_current]})
             actions.append({self.PLAY: play_song})
             self.last_play_button_click = current_button_click
 
         if self.__going_to_sleep(actions):
-            actions.append({self.LED: self.sleep_led_color})
+            actions.append({self.LED: CONFIG.SLEEP_LED_COLOR})
             actions.append({self.SLEEP: None})
         elif self.__waking_up(actions):
             # TODO: Optimise: skip LED restore action if there is already an LED action
             # Insert in front and not append since wake up actions should be before other actions
-            actions.insert(0, {self.LED: self.page_led_color[self.__page_current]})
+            actions.insert(0, {self.LED: CONFIG.MODE_LED_COLOR[self.__page_current]})
             actions.insert(0, {self.WAKE: None})  # wake up should be first action
 
         if self.__valid_control_click(current_button_clicks):
@@ -382,7 +366,10 @@ class Play:  # pylint: disable=too-many-instance-attributes
         return list(action.values())[0]
 
     def get_files(self):
-        return sum(self.play_list_pages, [self.rickroll_song, CONFIG.CHIME_AUDIO_FILE])
+        return sum(
+            CONFIG.PLAY_LIST_BY_MODE,
+            [CONFIG.RICKROLL_AUDIO_FILE, CONFIG.CHIME_AUDIO_FILE],
+        )
 
     def get_chime_actions(self, chimes, audio_file=CONFIG.CHIME_AUDIO_FILE):
         actions = []
@@ -401,12 +388,12 @@ class Play:  # pylint: disable=too-many-instance-attributes
         # web click is not zero indexed, zero is used for stop play
         actions = {}
         if web_click == 0:
-            actions = [{self.STOP: None}, {self.LED: self.sleep_led_color}]
+            actions = [{self.STOP: None}, {self.LED: CONFIG.SLEEP_LED_COLOR}]
         elif web_click is not None and self.__valid_play_click(web_click - 1):
-            play_song = self.play_list_pages[self.web_play_page][web_click - 1]
+            play_song = CONFIG.PLAY_LIST_BY_MODE[self.web_play_page][web_click - 1]
             # Default static led when flair mode is disabled
             actions = [
-                {self.LED: self.page_led_color[self.web_play_page]},
+                {self.LED: CONFIG.MODE_LED_COLOR[self.web_play_page]},
                 {self.PLAY: play_song},
             ]
         return actions
@@ -433,7 +420,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
 
     def __debug_click_status(self, clicks):
         click_status = ["_"] * self.max_buttons
-        for i in range(len(self.play_list_pages[0])):
+        for i in range(len(CONFIG.PLAY_LIST_BY_MODE[0])):
             click_status[i] = "-"
         click_status[self.page_flip_button] = "="
         click_status[self.audio_up_button] = "="
