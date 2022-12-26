@@ -68,8 +68,24 @@ Pi Pico W has only `264kB` RAM and `2MB` Flash storage.
 - Compile to memory efficient `.mpy` files when deploying
 - Audio LED visual effects made optional to reduce system load
 
-On top of memory constrain issues the system load caused audio playback quality issues.
-The system load was affected by simultaneous processing of writing log files 
-to the same SD card from where audio was being read and at the same time doing 
-audio LED visual effects as well.
+On top of the memory constrain issues the system load caused audio playback quality issues.
+The system load was affected by simultaneous processing - log writes and audio file reads from same
+SD card storge, LED visual effects, system event checks on GPIO pins, wi-fi polling.
+
+The log writes to the SD card (added to debug memory issues) were removed since this
+with memory issues caused SD card corruptions during hard reset to recover hanging system.
+And the audio files on the SD card were changed to read only mode to prevent corruptions
+during hard reset.
+
+## TODO
+
+- Add detailed system status reportng - storage usage, cpu temp, versions etc.
+- Extend device api for additional app controls - volume, chime on/off, mode selection
+- Update to latest CircuitPython release version and update the packages
+- Add ambient mode with loop playback in custom mode
+- Restore console logging after memory issues are resolved
+- Add Mypy type checking
+- Use the app server time for NTP sync
+- Add new LED visual effects
+- Add audio messages during startup and control button clicks
 

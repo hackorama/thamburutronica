@@ -14,16 +14,17 @@ A wood working and microcontroller project to create a touch sensor electronic c
 - Remote wireless control using mobile app
 - Supports multiple audio modes
   - Touch mode - plays chord scales only when held down
-  - Tap mode - starts/stops playing chord scales on single tap
-  - Custom mode - plays any custom audio files other than chord scales
-    - Includes a fun mode for random rickrolling :smile:
+  - Tap mode - starts/stops chord scales on single tap
+  - Custom mode - Instead of chord scales, play any custom audio files
+    - Add any ambient music, nature sounds, muzak, white noise etc.
+    - Custom mode also supports a fun mode with random rickrolling for kids
 - Clock with hourly chimes based on different thamburu scales
   - Can be customized - chime music, selected hours, holidays etc.
 - An RGB LED for mode/status indicator and audio visualizer effects
   - Can be customized - fade effects, audio level effects etc.
-- Auto power save sleep and wake up
+- Auto power save with sleep and wake up
 
-## Code 
+## Code
 
 - [Microcontroller CircuitPython code](./src/microcontroller/README.md)
 - [Mobile app](./src/mobile/README.md)
