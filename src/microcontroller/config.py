@@ -82,6 +82,6 @@ class CONFIG:  # pylint: disable=too-few-public-methods
         # If a single audio is provided then it will be repeated as hourly chime
         #
         "1-1": ["als.wav"],
-        "12-25": ["aiam.wav", "dth.wav", "hth.wav", "jttw.wav", "oct.wav", "sn.wav"],
         "7-4": ["hbd.wav"],
+        "12-25": ["aiam.wav", "dth.wav", "hth.wav", "jttw.wav", "oct.wav", "sn.wav"],
     }

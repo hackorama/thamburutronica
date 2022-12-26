@@ -370,11 +370,25 @@ class Play:  # pylint: disable=too-many-instance-attributes
     def get_params(action):
         return list(action.values())[0]
 
-    def get_files(self):
+    def get_play_files(self):
         return sum(
             CONFIG.PLAY_LIST_BY_MODE,
-            [CONFIG.RICKROLL_AUDIO_FILE, CONFIG.CHIME_AUDIO_FILE],
+            [
+                CONFIG.RICKROLL_AUDIO_FILE,
+                CONFIG.CHIME_AUDIO_FILE,
+                CONFIG.AUDIO_BEEP_FILE,
+            ],
         )
+
+    def get_chime_files(self):
+        return list(
+            {file for files in CONFIG.CHIME_SPECIAL_DAYS.values() for file in files}
+        )
+
+    def get_files(self):
+        files = self.get_play_files()
+        files.extend(self.get_chime_files())
+        return files
 
     def get_chime_actions(self, chimes, audio_file=CONFIG.CHIME_AUDIO_FILE):
         actions = []

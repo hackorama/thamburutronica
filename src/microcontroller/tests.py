@@ -141,9 +141,15 @@ def test_action(play, touches, actions):
 def test():
     play = Play(debug=True, trace=True)
 
+    audio_files = play.get_play_files()
+    chime_files = play.get_chime_files()
     files = play.get_files()
-    assert len(files) == 14  # 3 * 4 chords + 1 rickroll + 1 chimes
+    print(", ".join(audio_files))
+    print(", ".join(chime_files))
     print(", ".join(files))
+    assert len(audio_files) == 15  # 3 * 4 chords + 1 beep + 1 rickroll + 1 chimes
+    assert len(files) >= 15
+    assert len(files) == len(audio_files) + len(chime_files)
 
     actual_actions = []
     play.debug_click_status_info()
