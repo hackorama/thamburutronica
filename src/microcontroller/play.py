@@ -243,8 +243,13 @@ class Play:  # pylint: disable=too-many-instance-attributes
             > CONFIG.SLEEP_ON_INACTIVITY_FOR_SECS
         )
 
-    def __going_to_sleep(self, actions):
-        sleep = not actions and not self.sleeping and self.__ready_to_sleep()
+    def __going_to_sleep(self, actions, audio_playing=False):
+        sleep = (
+            not actions
+            and not audio_playing
+            and not self.sleeping
+            and self.__ready_to_sleep()
+        )
         if sleep:
             self.sleeping = True
         return sleep
@@ -264,7 +269,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
 
     # TODO Modularise using a state machine approach
     def process_clicks(
-        self, touches
+        self, touches, audio_playing=False
     ):  # pylint: disable=too-many-branches, too-many-statements
 
         assert len(touches) <= self.max_buttons  # TODO FIXME change to == check
@@ -318,7 +323,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
             actions.append({self.PLAY: play_song})
             self.last_play_button_click = current_button_click
 
-        if self.__going_to_sleep(actions):
+        if self.__going_to_sleep(actions, audio_playing):
             actions.append({self.LED: CONFIG.SLEEP_LED_COLOR})
             actions.append({self.SLEEP: None})
         elif self.__waking_up(actions):

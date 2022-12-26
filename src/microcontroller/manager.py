@@ -107,7 +107,9 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
         return result
 
     def __process_clicks(self):
-        return self.play.process_clicks(self.pico.get_touches())
+        return self.play.process_clicks(
+            self.pico.get_touches(), self.pico.audio_playing()
+        )
 
     def __process_web_click(self, actions):
         if not CONFIG.MCU_SUPPORTS_WIFI:

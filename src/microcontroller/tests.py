@@ -347,7 +347,7 @@ def test():
 
 def test_sleep():
     print("Test sleep/wake actions ...")
-    print("Wait for a minute to finish")
+    print("Wait for few minutes to finish")
     play = Play(debug=True, trace=True)
 
     play.debug_click_status_info()
@@ -369,6 +369,24 @@ def test_sleep():
     assert play.is_led(chime_actions[0])
     assert play.is_play(chime_actions[1])
 
+    print("While audio playing do no sleep even when idle (no actions)")
+
+    while duration < sleep_threshold:
+        action = play.process_clicks(touches, True)  # audio is playing
+        duration = time.monotonic() - start
+        print(f"{int(duration)} {action}")
+        assert action == []
+        time.sleep(10)
+
+    print("While audio not playing, sleep after idle (no actions) time")
+
+    play = Play(debug=True, trace=True)
+    action = play.process_clicks(touches)
+    assert action == [{"STOP": None}, {"LED": (0, 0, 0)}]
+
+    start = time.monotonic()
+    duration = 0
+
     while duration < sleep_threshold:
         action = play.process_clicks(touches)
         duration = time.monotonic() - start
@@ -378,6 +396,8 @@ def test_sleep():
         else:
             assert action == []
         time.sleep(10)
+
+    print("While sleeping wake up on any action")
 
     action = play.process_clicks(touches)
     duration = time.monotonic() - start

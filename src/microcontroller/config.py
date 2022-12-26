@@ -40,7 +40,7 @@ class CONFIG:  # pylint: disable=too-few-public-methods
     FLAIR_ENABLED = False
     FLAIR_ANIMATION_SPEED = 3
 
-    SLEEP_ON_INACTIVITY_FOR_SECS = 60 * 5
+    SLEEP_ON_INACTIVITY_FOR_SECS = 60 * 3
     SLEEP_LED_COLOR = (0, 0, 0)
 
     WIFI_SSID_ENV = "WIFI_SSID"
