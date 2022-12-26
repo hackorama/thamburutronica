@@ -21,6 +21,9 @@ sox $IN -c 1 -b 16 -r 16000 $OUT_WAV
 # pcm_s16le 16 bit
 ffmpeg -i $IN -acodec pcm_s16le -ac 1 -ar 16000 $OUT_WAV
 
+# check level
+ffmpeg -i $IN  -filter:a volumedetect -f null /dev/null
+
 ffprobe  $IN
 ffprobe  $OUT_MP3
 ffprobe  $OUT_WAV
