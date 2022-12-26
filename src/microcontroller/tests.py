@@ -352,7 +352,8 @@ def test_sleep():
 
     play.debug_click_status_info()
 
-    sleep_threshold = 60  # play.sleep_on_no_activity_for_secs
+    CONFIG.SLEEP_ON_INACTIVITY_FOR_SECS = 60
+    sleep_threshold = CONFIG.SLEEP_ON_INACTIVITY_FOR_SECS
     start = time.monotonic()
     duration = 0
 
