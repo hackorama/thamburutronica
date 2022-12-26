@@ -9,9 +9,6 @@ class Chime:  # pylint: disable=too-few-public-methods
     for only the designated time periods.
     """
 
-    START_HOURS = CONFIG.CHIME_START_HOURS
-    END_HOURS = CONFIG.CHIME_END_HOURS
-
     def __init__(self):
         self.__last_hour = -1
         self.__special_track_count = 0
@@ -28,7 +25,7 @@ class Chime:  # pylint: disable=too-few-public-methods
         return hour if hour <= 12 else hour - 12
 
     def __valid_hours(self, hour):
-        return self.START_HOURS <= hour <= self.END_HOURS
+        return CONFIG.CHIME_START_HOURS <= hour <= CONFIG.CHIME_END_HOURS
 
     def __hour_changed(self):
         hour = self.__current_hour()
