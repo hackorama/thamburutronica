@@ -16,8 +16,6 @@ from config import CONFIG
 
 class Pico:  # pylint: disable=too-many-instance-attributes
     """
-    TODO FIXME too-many-instance-attributes : move attributes to common config.CONFIG
-
     The MCU specific driver implementation for Pi Pico W
 
       - Process events from click and touch input

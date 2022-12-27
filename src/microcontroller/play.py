@@ -5,8 +5,6 @@ from config import CONFIG
 
 class Play:  # pylint: disable=too-many-instance-attributes
     """
-    TODO FIXME too-many-instance-attributes : move attributes to common config.CONFIG
-
     Pure python class with music player control logic, no MCU specific imports
 
     All MCU specific implementation will be in a separate MCU module like Pico for Pi Pico
@@ -41,11 +39,8 @@ class Play:  # pylint: disable=too-many-instance-attributes
         self.debug = debug
         self.trace = trace
 
-        self.audio_gain_default = CONFIG.AUDIO_GAIN_DEFAULT_DB
-        self.audio_gain_current = self.audio_gain_default
+        self.audio_gain_current = CONFIG.AUDIO_GAIN_DEFAULT_DB
         self.audio_gain_min = 0
-        self.audio_gain_max = CONFIG.AUDIO_GAIN_MAX_DB
-        self.audio_gain_step = CONFIG.AUDIO_GAIN_STEP_DB
 
         self.audio_up_button = 7
         self.audio_down_button = 8
@@ -53,7 +48,6 @@ class Play:  # pylint: disable=too-many-instance-attributes
         self.chime_mode_button = 9
         self.chime_on = CONFIG.CHIME_ON
 
-        self.max_buttons = CONFIG.TOUCH_BUTTON_COUNT  # Max buttons supported by board
         self.last_button_click = -1
         self.last_play_button_click = -1
 
@@ -86,9 +80,9 @@ class Play:  # pylint: disable=too-many-instance-attributes
         assert self.audio_up_button >= self.page_size
         assert self.audio_down_button >= self.page_size
         # Control buttons are valid
-        assert self.page_flip_button < self.max_buttons
-        assert self.audio_up_button < self.max_buttons
-        assert self.audio_down_button < self.max_buttons
+        assert self.page_flip_button < CONFIG.TOUCH_BUTTON_COUNT
+        assert self.audio_up_button < CONFIG.TOUCH_BUTTON_COUNT
+        assert self.audio_down_button < CONFIG.TOUCH_BUTTON_COUNT
         # All pages should have same songs count
         for page_list in CONFIG.PLAY_LIST_BY_MODE:
             assert self.page_size == len(page_list)
@@ -164,15 +158,15 @@ class Play:  # pylint: disable=too-many-instance-attributes
         if self.__volume_up_clicked(current_clicks) and self.__volume_down_clicked(
             current_clicks
         ):
-            self.audio_gain_current = self.audio_gain_default
+            self.audio_gain_current = CONFIG.AUDIO_GAIN_DEFAULT_DB
         elif self.__volume_up_clicked(current_clicks):
-            self.audio_gain_current += self.audio_gain_step
+            self.audio_gain_current += CONFIG.AUDIO_GAIN_STEP_DB
         elif self.__volume_down_clicked(current_clicks):
-            self.audio_gain_current -= self.audio_gain_step
+            self.audio_gain_current -= CONFIG.AUDIO_GAIN_STEP_DB
 
         # Correct for step overflow
-        if self.audio_gain_current > self.audio_gain_max:
-            self.audio_gain_current = self.audio_gain_max
+        if self.audio_gain_current > CONFIG.AUDIO_GAIN_MAX_DB:
+            self.audio_gain_current = CONFIG.AUDIO_GAIN_MAX_DB
         if self.audio_gain_current < self.audio_gain_min:
             self.audio_gain_current = self.audio_gain_min
 
@@ -267,12 +261,14 @@ class Play:  # pylint: disable=too-many-instance-attributes
             return CONFIG.MODE_LED_COLOR[page]
         return CONFIG.MODE_LED_COLOR[self.__page_current]
 
-    # TODO Modularise using a state machine approach
+    # TODO FIXME Modularise using a state machine approach
     def process_clicks(
         self, touches, audio_playing=False
     ):  # pylint: disable=too-many-branches, too-many-statements
 
-        assert len(touches) <= self.max_buttons  # TODO FIXME Change to == check ?
+        assert (
+            len(touches) <= CONFIG.TOUCH_BUTTON_COUNT
+        )  # TODO FIXME Change to == check ?
 
         current_button_clicks = []
         current_button_click = None
@@ -438,7 +434,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
         print()
 
     def __debug_click_status(self, clicks):
-        click_status = ["_"] * self.max_buttons
+        click_status = ["_"] * CONFIG.TOUCH_BUTTON_COUNT
         for i in range(len(CONFIG.PLAY_LIST_BY_MODE[0])):
             click_status[i] = "-"
         click_status[self.page_flip_button] = "="
