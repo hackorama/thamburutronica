@@ -15,6 +15,7 @@ class CONFIG:  # pylint: disable=too-few-public-methods
     AUDIO_GAIN_DEFAULT_DB = 4
     AUDIO_GAIN_MAX_DB = 30
     AUDIO_GAIN_STEP_DB = 2
+    AUDIO_QUIESCENT_VALUE = 0  # 0, 1x 32768, 2x 65535 Audio output value when no signal
     AUDIO_BEEP_FILE = "beep.wav"
 
     STARTUP_LED = (200, 200, 200)  # white

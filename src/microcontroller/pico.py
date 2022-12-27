@@ -110,7 +110,9 @@ class Pico:  # pylint: disable=too-many-instance-attributes
             self.buffer = bytearray(CONFIG.AUDIO_BUFFER_SIZE_BYTES)
         if not self.audio_out:
             # quiescent_value 0x0000 0 = 0%, 0x8000 32768 = 100%, 0xFFFF 65535 = 200%
-            self.audio_out = PWMAudioOut(self.AUDIO_PIN, quiescent_value=0)
+            self.audio_out = PWMAudioOut(
+                self.AUDIO_PIN, quiescent_value=CONFIG.AUDIO_QUIESCENT_VALUE
+            )
 
     def __init_amp(self):
         if not self.amp_i2c:
