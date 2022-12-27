@@ -38,7 +38,7 @@ class Chime:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def __time_synced():
-        # if time sync failed time will reset to chip epoch
+        # If time sync failed time will reset to chip epoch
         return int(datetime.now().year) > CONFIG.MCU_CHIP_EPOCH_YEAR
 
     def get_chimes(self):

@@ -53,29 +53,31 @@ Programmed using [CircuitPython 8](https://circuitpython.org/board/raspberry_pi_
 
 ## Memory handling notes
 
-As new features were added (Wi-Fi, clock chimes etc.) had to make some changes to fit everything into the microcontroller memory.
+As new features were added (Wi-Fi, clock chimes etc.) had to make some changes
+to fit everything into the limited microcontroller memory.
 
 Pi Pico W has only `264kB` RAM and `2MB` Flash storage.
 
-- Removed non-essential features saving module import memory use
+- Removed non-essential features saving module import memory usage
   - Logging with logging file handler, switched to simple console prints
   - Debug use of on-board buttons and neo pixel
   - Multi channel audio mixer
 - Switch to memory and cpu efficient `wave` files instead of `mp3` files
-  - The space non-efficient `wave` files are on the external SD card
-- Late import of modules, aggressive periodic gc collection 
-- Prefer bools/ints over strings, no object allocations in the event loop
+  - The space non-efficient `wave` files are on the SD card and not on the on-board flash storage
+- Late lazy import of modules, aggressive periodic gc collection
+- No object allocations in the event loop, prefer bools/ints over strings
 - Compile to memory efficient `.mpy` files when deploying
-- Audio LED visual effects made optional to reduce system load
+- Audio LED visual effects were made optional to reduce system load
 
-On top of the memory constrain issues the system load caused audio playback quality issues.
-The system load was affected by simultaneous processing - log writes and audio file reads from same
-SD card storge, LED visual effects, system event checks on GPIO pins, wi-fi polling.
+On top of the memory pressure issues the cpu load caused audio playback quality issues.
+The cpu load was caused by simultaneous processing of - log writes and audio file reads
+from same SD card storge, LED visual effects, event checks on GPIO pins, Wi-Fi polling.
 
-The log writes to the SD card (added to debug memory issues) were removed since this
-with memory issues caused SD card corruptions during hard reset to recover hanging system.
-And the audio files on the SD card were changed to read only mode to prevent corruptions
-during hard reset.
+The log writes to the SD card (which were added to debug memory issues) were removed since
+the increased cpu load along with memory pressure caused random system hangs.
+The audio files on the SD card were changed to read only mode to prevent file corruptions
+during hard reset after a hang. A storage sanity check was added to detect any
+file corruptions on system start.
 
 ## TODO
 
@@ -85,7 +87,8 @@ during hard reset.
 - Add ambient mode with loop playback in custom mode
 - Restore console logging after memory issues are resolved
 - Add Mypy type checking
-- Use the app server time for NTP sync
+- Use the local app server time instead of external NTP sync
+- Add automatic daylight savings adjustment on NTP sync tz offset
 - Add new LED visual effects
 - Add audio messages during startup and control button clicks
 

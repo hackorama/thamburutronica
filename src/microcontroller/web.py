@@ -71,7 +71,7 @@ class Web:  # pylint: disable=too-many-instance-attributes
         retries = max_retries
         while retries:
             retries -= 1
-            gc.collect()  # wi-fi init requires memory
+            gc.collect()  # Wi-Fi init requires memory
             print(
                 f"Connecting to {self.ssid} {max_retries - retries}/{max_retries} ..."
             )
@@ -86,7 +86,7 @@ class Web:  # pylint: disable=too-many-instance-attributes
         retries = max_retries
         while retries:
             retries -= 1
-            gc.collect()  # wi-fi init requires memory
+            gc.collect()  # Wi-Fi init requires memory
             try:
                 http_server = HTTPServer(self.pool)
                 print(
@@ -102,9 +102,9 @@ class Web:  # pylint: disable=too-many-instance-attributes
                         f"Restarting in {CONFIG.WIFI_SYSTEM_RESTART_WAIT_SECS} secs ..."
                     )
                     time.sleep(CONFIG.WIFI_SYSTEM_RESTART_WAIT_SECS)
-                    # TODO FIXME rename microcontroller package
+                    # TODO FIXME Rename microcontroller package
                     microcontroller.reset()  # pylint: disable=no-member
-                del http_server  # gc collection hint
+                del http_server  # GC collection hint
 
     @property
     def device_registered(self):
@@ -166,7 +166,7 @@ class Web:  # pylint: disable=too-many-instance-attributes
 
     @staticmethod
     def get_device_metrics():
-        # TODO no-member: check CircuitPython lib stub issue ?
+        # TODO no-member: Check CircuitPython lib stub issue ?
         mem_used = gc.mem_alloc()  # pylint: disable=no-member
         mem_free = gc.mem_free()  # pylint: disable=no-member
         mem_available = mem_used + mem_free
@@ -175,7 +175,7 @@ class Web:  # pylint: disable=too-many-instance-attributes
 
     def sync_time(self, max_retries=1):
         retries = max_retries
-        tz_offset = int(os.getenv(CONFIG.NTP_TZ_OFFSET_ENV, "0"))  # defaults to UTC/GM
+        tz_offset = int(os.getenv(CONFIG.NTP_TZ_OFFSET_ENV, "0"))  # Defaults to UTC/GM
         while retries:
             retries -= 1
             print(
@@ -188,7 +188,7 @@ class Web:  # pylint: disable=too-many-instance-attributes
                     socket_timeout=CONFIG.NTP_TIMEOUT_SECS,
                 )
                 rtc.RTC().datetime = ntp.datetime
-                # if time sync failed time will reset to chip epoch
+                # IF time sync failed time will reset to chip epoch
                 return int(datetime.now().year) > CONFIG.MCU_CHIP_EPOCH_YEAR
             except Exception as error:  # pylint: disable=broad-except
                 print(f"Failed NTP sync with error {error}")

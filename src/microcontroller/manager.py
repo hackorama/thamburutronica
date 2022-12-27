@@ -10,7 +10,7 @@ from play import Play
 
 class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attributes
     """
-    Implements the event loop checks and orchestrate interaction between modules
+    Implements the event loop checks and orchestrates interaction between modules
 
     Manager polls for events from MCU module Pi Pico W:
       - Touch and click inputs from MCU
@@ -59,22 +59,22 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
 
     def __report_system_status(self, web_status, storage_status):
         if storage_status and web_status:
-            # both storage and wi-fi ok
+            # Both storage and wi-fi ok
             self.pico.set_led_rgb(CONFIG.STARTUP_READY_LED)
             self.pico.beep()
             print("Device ready")
             time.sleep(1)
         else:
             if not storage_status and not web_status:
-                # both storage and w-fi failed
+                # Both storage and w-fi failed
                 self.pico.set_led_rgb(CONFIG.STARTUP_STORAGE_AND_WIFI_FAIL_LED)
                 print("ERROR: Device not ready, no SD card and no Wi-Fi")
             elif not storage_status:
-                # only storage failed
+                # Only storage failed
                 self.pico.set_led_rgb(CONFIG.STARTUP_STORAGE_FAIL_LED)
                 print("ERROR: Device not ready, no SD card")
             elif web_status is None:
-                # unhandled exception during wi-fi, handled exception will set led
+                # Unhandled exception during wi-fi, handled exception will set led
                 self.pico.set_led_rgb(CONFIG.STARTUP_WIFI_UNKNOWN_FAIL_LED)
                 print("ERROR: Device not ready, no Wi-Fi")
             print("Wait ...")
@@ -83,7 +83,7 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
         self.memory_sweep()
 
     def __init_check_wifi(self):
-        # routes defined in Web will get initialised during get_web_instance import
+        # Routes defined in Web will get initialised during get_web_instance import
         # and could fail without wi-fi
         try:
             return self.__init_wifi()
@@ -96,7 +96,7 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
         if not CONFIG.MCU_SUPPORTS_WIFI:
             print("WARNING: Board do not support Wi-Fi")
             return result
-        # memory constrain, late import  only if board has wi-fi support
+        # Memory constrain, late import  only if board has wi-fi support
         from web import get_web_instance  # pylint: disable=import-outside-toplevel
 
         try:
@@ -127,7 +127,7 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
             return actions
         if not self.web.device_registered:
             self.web.register_device()
-        self.web.server.poll()  # TODO FIXME method call
+        self.web.server.poll()  # TODO FIXME Wrap in a method call
         # TODO Consider clearing existing actions for web click
         web_actions = self.play.process_web_click(self.web.get_click())
         if web_actions:  # extend list of action
@@ -139,14 +139,14 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
             return actions
         r, g, b = self.pico.get_led()
         flair_action = self.flair.process(r, g, b, self.pico.audio_playing())
-        if flair_action:  # append single action
+        if flair_action:  # Append single action
             actions.append(flair_action)
         return actions
 
     def __process_chimes(self, actions):
         chimes = self.chime.get_chimes()
         # TODO Consider clearing existing actions for chimes
-        if chimes:  # extend list of actions
+        if chimes:  # Extend list of actions
             actions.extend(
                 self.play.get_chime_actions(chimes, self.chime.get_chime_audio_file())
             )

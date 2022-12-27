@@ -27,12 +27,12 @@ class Pico:  # pylint: disable=too-many-instance-attributes
     This interface can be ported to support other MCUs like Arduino
     """
 
-    NEO_PIXEL_PIN = board.GP28  # NOTE: shared with rgb LED
+    NEO_PIXEL_PIN = board.GP28  # NOTE: Shared with rgb LED
     AUDIO_PIN = board.GP18
 
     LED_RED_PIN = board.GP16
     LED_GREEN_PIN = board.GP17
-    LED_BLUE_PIN = board.GP28  # NOTE: shared with on-board neo pixel
+    LED_BLUE_PIN = board.GP28  # NOTE: Shared with on-board neo pixel
     LED_COMMON_ANODE = False
 
     # AMP and TOUCH devices on different I2C bus
@@ -163,7 +163,7 @@ class Pico:  # pylint: disable=too-many-instance-attributes
         for i in range(count):
             print(f"Playing: {file} {i+1}/{count}")
             self.audio_out.play(sample)
-            # wait to finish if playing more than once
+            # Wait to finish if playing more than once
             while count > 1 and self.audio_out.playing:
                 pass
 

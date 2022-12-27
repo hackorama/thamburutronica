@@ -42,7 +42,7 @@ class Flair:  # pylint: disable=too-few-public-methods
         self.animation_speed = speed
 
     def __level_effect(self, level=0):
-        print(f"Audio level {level}")  # TODO implement LED level effect
+        print(f"Audio level {level}")  # TODO Implement LED level effect
 
     def __breath_effect(self):
         if self.animated_r != 0:

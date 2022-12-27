@@ -31,11 +31,11 @@ class Play:  # pylint: disable=too-many-instance-attributes
 
         self.__page_current = 0
         self.page_size = len(CONFIG.PLAY_LIST_BY_MODE[0])
-        # pages that need key continuously pressed to play, otherwise single click starts playing
+        # Pages that need key continuously pressed to play, otherwise single click starts playing
         self.momentary_click_mode_pages = [0]
 
-        # play buttons by default are 0 to page_size buttons
-        # page flip must be a button that is not play button
+        # Play buttons by default are 0 to page_size buttons
+        # Page flip must be a button that is not play button
         self.page_flip_button = 4
 
         self.debug = debug
@@ -53,11 +53,11 @@ class Play:  # pylint: disable=too-many-instance-attributes
         self.chime_mode_button = 9
         self.chime_on = CONFIG.CHIME_ON
 
-        self.max_buttons = CONFIG.TOUCH_BUTTON_COUNT  # max buttons supported by board
+        self.max_buttons = CONFIG.TOUCH_BUTTON_COUNT  # Max buttons supported by board
         self.last_button_click = -1
         self.last_play_button_click = -1
 
-        # map by order the physical button clicks to touch button click
+        # Map by order the physical button clicks to touch button click
         self.clicks_to_touches_map = [
             self.page_flip_button,
             self.audio_up_button,
@@ -76,28 +76,28 @@ class Play:  # pylint: disable=too-many-instance-attributes
         self.valid_config = self.__assert_configuration()
 
     def __assert_configuration(self):
-        # control buttons are unique
+        # Control buttons are unique
         assert (
             len({self.page_flip_button, self.audio_up_button, self.audio_down_button})
             == 3
         )
-        # control buttons cannot be the initial play buttons
+        # Control buttons cannot be the initial play buttons
         assert self.page_flip_button >= self.page_size
         assert self.audio_up_button >= self.page_size
         assert self.audio_down_button >= self.page_size
-        # control buttons are valid
+        # Control buttons are valid
         assert self.page_flip_button < self.max_buttons
         assert self.audio_up_button < self.max_buttons
         assert self.audio_down_button < self.max_buttons
-        # all pages should have same songs count
+        # All pages should have same songs count
         for page_list in CONFIG.PLAY_LIST_BY_MODE:
             assert self.page_size == len(page_list)
-        # valid page for momentary click mode
+        # Valid page for momentary click mode
         for page_number in self.momentary_click_mode_pages:
             assert page_number < self.page_size
-        # led color list should match page count
+        # LED color list should match page count
         assert len(CONFIG.PLAY_LIST_BY_MODE) == len(CONFIG.MODE_LED_COLOR)
-        # rickroll page is valid
+        # Rickroll page is valid
         assert self.rickroll_page < self.page_size
 
         return True
@@ -149,7 +149,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
             self.__page_current += 1
 
     def __page_clicked(self, current_clicks, current_button_click):
-        # all play buttons clicked is same as a page flip button click
+        # All play buttons clicked is same as a page flip button click
         if self.__all_play_buttons_clicked(
             current_clicks
         ) or self.__only_page_flip_button_clicked(current_clicks):
@@ -170,7 +170,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
         elif self.__volume_down_clicked(current_clicks):
             self.audio_gain_current -= self.audio_gain_step
 
-        # correct for step overflow
+        # Correct for step overflow
         if self.audio_gain_current > self.audio_gain_max:
             self.audio_gain_current = self.audio_gain_max
         if self.audio_gain_current < self.audio_gain_min:
@@ -272,7 +272,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
         self, touches, audio_playing=False
     ):  # pylint: disable=too-many-branches, too-many-statements
 
-        assert len(touches) <= self.max_buttons  # TODO FIXME change to == check
+        assert len(touches) <= self.max_buttons  # TODO FIXME Change to == check ?
 
         current_button_clicks = []
         current_button_click = None
@@ -281,9 +281,9 @@ class Play:  # pylint: disable=too-many-instance-attributes
                 current_button_clicks.append(i)
 
         if current_button_clicks:
-            # for multi clicks we pick first one ignore others unless
+            # For multi clicks we pick first one ignore others unless
             current_button_click = current_button_clicks[0]
-            # check for all buttons which is an alias for page control click
+            # Check for all buttons which is an alias for page control click
             if self.__all_play_buttons_clicked(current_button_clicks):
                 current_button_click = self.page_flip_button
             if self.__volume_up_clicked(current_button_clicks):
@@ -292,7 +292,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
                 current_button_click = self.audio_down_button
 
         actions = []
-        # control buttons have preference over play buttons so check them first
+        # Control buttons have preference over play buttons so check them first
         if self.__volume_clicked(current_button_clicks, current_button_click):
             actions.append({self.GAIN: [self.audio_gain_current]})
             actions.append({self.BEEP: None})
@@ -399,12 +399,12 @@ class Play:  # pylint: disable=too-many-instance-attributes
             {self.LED: CONFIG.CHIME_LED},
             {self.PLAY: audio_file},
         ]
-        if self.__waking_up(actions):  # if sleeping wake up before chime actions
+        if self.__waking_up(actions):  # If sleeping wake up before chime actions
             actions.insert(0, {self.WAKE: None})  # first action
         return actions
 
     def process_web_click(self, web_click):
-        # web click is not zero indexed, zero is used for stop play
+        # Web click is not zero indexed, zero is used for stop play
         actions = {}
         if web_click == 0:
             actions = [{self.STOP: None}, {self.LED: CONFIG.SLEEP_LED_COLOR}]
