@@ -72,7 +72,7 @@ function stat() {
                     status = null;
                     fetch("/device/diag")
                         .then(function (response) { return response.text(); })
-                        .then(function (data) { return status = JSON.parse(data); }) // parse to remove quotes
+                        .then(function (data) { return (status = JSON.parse(data)); }) // Parse to remove quotes
                     ["catch"](function (ex) {
                         status = "error";
                         console.log("status = %s", status);
@@ -82,7 +82,8 @@ function stat() {
                 case 1:
                     if (!!status) return [3 /*break*/, 3];
                     console.log("status = %s", status);
-                    system_elem.innerHTML = c % 2 ? "Checking device . ." : "Checking device ...";
+                    system_elem.innerHTML =
+                        c % 2 ? "Checking device . ." : "Checking device ...";
                     return [4 /*yield*/, new Promise(function (r) { return setTimeout(r, 1000); })];
                 case 2:
                     _a.sent();
@@ -100,8 +101,8 @@ function chordClick() {
     if (connected === false) {
         return;
     }
-    hide_alerts();
-    // toggle clicked chord color
+    hideAlerts();
+    // Toggle clicked chord color
     if (this.getAttribute("status") == "clicked") {
         this.setAttribute("status", "");
         this.style.backgroundColor = CHORD_COLOR;
@@ -112,7 +113,7 @@ function chordClick() {
         this.style.backgroundColor = CHORD_ACTIVE_COLOR;
         setChord(this.id);
     }
-    // reset rest of the chord colors
+    // Reset rest of the chord colors
     for (var i = 0; i < chords.length; i++) {
         if (chords[i].id != this.id) {
             chords[i].style.backgroundColor = CHORD_COLOR;
@@ -120,7 +121,7 @@ function chordClick() {
         }
     }
 }
-function hide_alerts() {
+function hideAlerts() {
     var alert_elem = document.getElementById("header");
     if (alert_elem) {
         alert_elem.style.display = "none";

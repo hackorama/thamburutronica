@@ -26,7 +26,7 @@ Version 4.8.4
 ```
 
 ```shell
-$ tsc main.ts
+$ tsc script.ts
 ```
 
 ```shell
@@ -40,21 +40,21 @@ $ cat tsconfig.json
     ]
   },
   "files": [
-    "main.ts"
+    "script.ts"
   ]
 }
 ```
 
 ```shell
-$ ls static/main.*
+$ ls static/script.*
 
 $ tsc --strict
 
-$ ls static/main.*
-main.js
+$ ls static/script.*
+script.js
 ```
 
 ```shell
 $ npm install prettier
-$ npx prettier --write main.ts
+$ npx prettier --write script.ts
 ```

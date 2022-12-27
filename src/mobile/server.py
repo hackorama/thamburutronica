@@ -16,12 +16,12 @@ REQUEST_TIMEOUT_SECS = 30
 CHORD_COUNT = 4
 DEFAULT_METRICS = ["0", "0", "0", "0", "0", "0", "0", "0", "0:0:0", "0", "", "0", "0"]
 
-DATA_STORE: Dict[str, str] = {}  # in memory store, use with single worker process
+DATA_STORE: Dict[str, str] = {}  # In memory store, use with single worker process
 
 app = FastAPI()
 
 """
-Simple REST API server for:
+Simple REST API server:
  - Device can register the device IP
  - Web UI can send the chord clicks
  - Proxies the chord clicks from web UI to the device
@@ -177,8 +177,8 @@ async def chord_click(click: int, response: Response) -> str:
         response.status_code = status.HTTP_400_BAD_REQUEST
         device_response = "invalid"
     else:
-        # TODO update when device http server stack supports request params
-        # device_response = device_post(f"chord?click={click}") or "error"
+        # TODO Update when device http server stack supports request params
+        #      device_response = device_post(f"chord?click={click}") or "error"
         device_response = device_post(f"chord/{click}") or "error"
     logger.info(f"device chord {click} -> {device_response}")
     if "ok" not in device_response:

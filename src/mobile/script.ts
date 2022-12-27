@@ -20,7 +20,7 @@ function start() {
   ping();
 }
 
-function settings(){
+function settings() {
   stat();
 }
 
@@ -33,8 +33,8 @@ async function stat() {
   system_elem.innerHTML = "Checking device   .";
   let status = null;
   fetch("/device/diag")
-    .then(response => response.text())
-    .then(data => status = JSON.parse(data)) // parse to remove quotes
+    .then((response) => response.text())
+    .then((data) => (status = JSON.parse(data))) // Parse to remove quotes
     .catch(function (ex) {
       status = "error";
       console.log("status = %s", status);
@@ -42,7 +42,8 @@ async function stat() {
   let c = 0;
   while (!status) {
     console.log("status = %s", status);
-    system_elem.innerHTML = c % 2 ? "Checking device . ." : "Checking device ...";
+    system_elem.innerHTML =
+      c % 2 ? "Checking device . ." : "Checking device ...";
     await new Promise((r) => setTimeout(r, 1000));
     c++;
   }
@@ -54,8 +55,8 @@ function chordClick(this: any) {
   if (connected === false) {
     return;
   }
-  hide_alerts();
-  // toggle clicked chord color
+  hideAlerts();
+  // Toggle clicked chord color
   if (this.getAttribute("status") == "clicked") {
     this.setAttribute("status", "");
     this.style.backgroundColor = CHORD_COLOR;
@@ -65,7 +66,7 @@ function chordClick(this: any) {
     this.style.backgroundColor = CHORD_ACTIVE_COLOR;
     setChord(this.id);
   }
-  // reset rest of the chord colors
+  // Reset rest of the chord colors
   for (let i = 0; i < chords.length; i++) {
     if (chords[i].id != this.id) {
       chords[i].style.backgroundColor = CHORD_COLOR;
@@ -74,7 +75,7 @@ function chordClick(this: any) {
   }
 }
 
-function hide_alerts() {
+function hideAlerts() {
   let alert_elem = document.getElementById("header");
   if (alert_elem) {
     alert_elem.style.display = "none";
