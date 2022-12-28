@@ -1,4 +1,7 @@
-from typing import Optional
+try:
+    from typing import Optional
+except ImportError:
+    pass  # No typing on device CircuitPython
 
 from adafruit_datetime import datetime
 

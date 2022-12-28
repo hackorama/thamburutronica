@@ -3,7 +3,11 @@ import ipaddress
 import json
 import os
 import time
-from typing import List, Optional
+
+try:
+    from typing import List, Optional
+except ImportError:
+    pass  # No typing on device CircuitPython
 
 import adafruit_ntp
 import adafruit_requests

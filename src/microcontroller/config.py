@@ -17,6 +17,10 @@ class CONFIG:  # pylint: disable=too-few-public-methods
     AUDIO_GAIN_STEP_DB = 2
     AUDIO_QUIESCENT_VALUE = 0  # 0, 1x 32768, 2x 65535 Audio output value when no signal
     AUDIO_BEEP_FILE = "beep.wav"
+    AUDIO_MIXER_ENABLED = True
+    AUDIO_MIXER_VOICE_COUNT = 1
+    AUDIO_MIXER_CHANNEL_COUNT = 1
+    AUDIO_MIXER_DEFAULT_CHANNEL = 0
 
     STARTUP_LED = (200, 200, 200)  # white
     STARTUP_WIFI_FAIL_LED = (255, 0, 0)  # red

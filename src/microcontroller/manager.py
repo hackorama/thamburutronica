@@ -1,6 +1,10 @@
 import gc
 import time
-from typing import Any, Dict, List, Optional
+
+try:
+    from typing import Any, Dict, List, Optional
+except ImportError:
+    pass  # No typing on device deploy
 
 from chime import Chime
 from config import CONFIG

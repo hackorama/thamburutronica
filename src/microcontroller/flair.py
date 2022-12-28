@@ -1,4 +1,7 @@
-from typing import Any, Dict, Optional
+try:
+    from typing import Any, Dict, Optional
+except ImportError:
+    pass  # No typing on device CircuitPython
 
 from config import CONFIG
 

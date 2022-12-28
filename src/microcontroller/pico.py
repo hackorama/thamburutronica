@@ -1,6 +1,10 @@
 import gc
 import os
-from typing import Any, List, Optional, Tuple
+
+try:
+    from typing import Any, List, Optional, Tuple
+except ImportError:
+    pass  # No typing on device CircuitPython
 
 import board
 from adafruit_mpr121 import MPR121
@@ -64,6 +68,7 @@ class Pico:  # pylint: disable=too-many-instance-attributes
         self.touch_mpr121 = None
         self.amp_i2c = None
         self.amp_tpa = None
+        self.mixer = None
         self.silent = silent
         self.debug = debug
         self.buffer: Optional[Any] = None
@@ -114,6 +119,17 @@ class Pico:  # pylint: disable=too-many-instance-attributes
             self.audio_out = PWMAudioOut(
                 self.AUDIO_PIN, quiescent_value=CONFIG.AUDIO_QUIESCENT_VALUE
             )
+        if CONFIG.AUDIO_MIXER_ENABLED and self.audio_out and not self.mixer:
+            import audiomixer  # on demand lazy import for memory efficiency
+
+            self.mixer = audiomixer.Mixer(
+                voice_count=CONFIG.AUDIO_MIXER_VOICE_COUNT,
+                sample_rate=16000,
+                channel_count=CONFIG.AUDIO_MIXER_CHANNEL_COUNT,
+                bits_per_sample=16,
+                samples_signed=True,
+            )
+            self.audio_out.play(self.mixer)  # Only once
 
     def __init_amp(self) -> None:
         if not self.amp_i2c:
@@ -157,6 +173,11 @@ class Pico:  # pylint: disable=too-many-instance-attributes
         self.play(self.__resolve_storage_path(audio_file))
 
     def set_gain(self, db: int) -> None:
+        if CONFIG.AUDIO_MIXER_ENABLED and self.mixer:
+            # Max db is AMP_MAX_GAIN for tpa. Map (0 - AMP_MAX_GAIN) to 0 to 1
+            level = 1 / (CONFIG.AUDIO_GAIN_MAX_DB / db) if db else 0
+            for i in range(CONFIG.AUDIO_MIXER_CHANNEL_COUNT - 1):
+                self.mixer.voice[i].level = level
         if self.amp_tpa:
             self.amp_tpa.fixed_gain = db
 
@@ -166,10 +187,19 @@ class Pico:  # pylint: disable=too-many-instance-attributes
             return
         for i in range(count):
             print(f"Playing: {file} {i+1}/{count}")
-            self.audio_out.play(sample)
-            # Wait to finish if playing more than once
-            while count > 1 and self.audio_out.playing:
-                pass
+            if CONFIG.AUDIO_MIXER_ENABLED and self.mixer:
+                self.mixer.voice[CONFIG.AUDIO_MIXER_DEFAULT_CHANNEL].play(sample)
+                # wait to finish if playing more than once
+                while (
+                    count > 1
+                    and self.mixer.voice[CONFIG.AUDIO_MIXER_DEFAULT_CHANNEL].playing
+                ):
+                    pass
+            else:
+                self.audio_out.play(sample)
+                # Wait to finish if playing more than once
+                while count > 1 and self.audio_out.playing:
+                    pass
 
     def play_wave(self, audio_file: str, count: int = 1) -> None:
         if self.buffer:
@@ -209,8 +239,11 @@ class Pico:  # pylint: disable=too-many-instance-attributes
             print(f"ERROR: Skipping unknown audio file type {audio_file}")
 
     def stop(self) -> None:
-        if self.audio_out and self.audio_out.playing:
-            print("Stopping audio")
+        print("Stopping audio")
+        if CONFIG.AUDIO_MIXER_ENABLED and self.mixer:
+            if self.mixer.voice[CONFIG.AUDIO_MIXER_DEFAULT_CHANNEL].playing:
+                self.mixer.voice[CONFIG.AUDIO_MIXER_DEFAULT_CHANNEL].stop()
+        elif self.audio_out and self.audio_out.playing:
             self.audio_out.stop()
 
     def get_touches(self) -> List[bool]:
