@@ -1,4 +1,5 @@
 import time
+from typing import Any, Dict, List, Optional, Tuple
 
 from config import CONFIG
 
@@ -25,7 +26,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
     SLEEP = "SLEEP"
     WAKE = "WAKE"
 
-    def __init__(self, debug=False, trace=False):
+    def __init__(self, debug: bool = False, trace: bool = False) -> None:
 
         self.__page_current = 0
         self.page_size = len(CONFIG.PLAY_LIST_BY_MODE[0])
@@ -69,7 +70,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
 
         self.valid_config = self.__assert_configuration()
 
-    def __assert_configuration(self):
+    def __assert_configuration(self) -> bool:
         # Control buttons are unique
         assert (
             len({self.page_flip_button, self.audio_up_button, self.audio_down_button})
@@ -96,53 +97,61 @@ class Play:  # pylint: disable=too-many-instance-attributes
 
         return True
 
-    def __all_play_buttons_clicked(self, current_clicks):
+    def __all_play_buttons_clicked(self, current_clicks: List[int]) -> bool:
         return (
             len(current_clicks) == self.page_size
             and max(current_clicks) <= self.page_size
         )
 
-    def __only_page_flip_button_clicked(self, current_clicks):
+    def __only_page_flip_button_clicked(self, current_clicks: List[int]) -> bool:
         return len(current_clicks) == 1 and self.page_flip_button in current_clicks
 
-    def __valid_play_click(self, click):
+    def __valid_play_click(self, click: Optional[int]) -> bool:
         return click is not None and click <= len(CONFIG.PLAY_LIST_BY_MODE)
 
-    def __valid_control_click(self, clicks):
+    def __valid_control_click(self, clicks: List[int]) -> bool:
         return (
             self.__volume_up_clicked(clicks)
             or self.__volume_up_clicked(clicks)
             or self.__only_page_flip_button_clicked(clicks)
         )
 
-    def __current_click_is_same_as_last_click(self, current_click):
+    def __current_click_is_same_as_last_click(
+        self, current_click: Optional[int]
+    ) -> bool:
         return self.last_button_click == current_click
 
-    def __current_click_is_not_same_as_last_click(self, current_click):
+    def __current_click_is_not_same_as_last_click(
+        self, current_click: Optional[int]
+    ) -> bool:
         return not self.__current_click_is_same_as_last_click(current_click)
 
-    def __current_click_is_same_as_last_play_click(self, current_click):
+    def __current_click_is_same_as_last_play_click(
+        self, current_click: Optional[int]
+    ) -> bool:
         return self.last_play_button_click == current_click
 
-    def __volume_up_clicked(self, current_clicks):
+    def __volume_up_clicked(self, current_clicks: List[int]) -> bool:
         return self.audio_up_button in current_clicks
 
-    def __volume_down_clicked(self, current_clicks):
+    def __volume_down_clicked(self, current_clicks: List[int]) -> bool:
         return self.audio_down_button in current_clicks
 
-    def __momentary_click_page(self):
+    def __momentary_click_page(self) -> bool:
         return self.__page_current in self.momentary_click_mode_pages
 
-    def __regular_click_page(self):
+    def __regular_click_page(self) -> bool:
         return not self.__momentary_click_page()
 
-    def __page_flip(self):
+    def __page_flip(self) -> None:
         if self.__page_current == len(CONFIG.PLAY_LIST_BY_MODE) - 1:
             self.__page_current = 0
         else:
             self.__page_current += 1
 
-    def __page_clicked(self, current_clicks, current_button_click):
+    def __page_clicked(
+        self, current_clicks: List[int], current_button_click: Optional[int]
+    ) -> bool:
         # All play buttons clicked is same as a page flip button click
         if self.__all_play_buttons_clicked(
             current_clicks
@@ -152,7 +161,9 @@ class Play:  # pylint: disable=too-many-instance-attributes
                 return True
         return False
 
-    def __volume_clicked(self, current_clicks, current_click):
+    def __volume_clicked(
+        self, current_clicks: List[int], current_click: Optional[int]
+    ) -> bool:
         if self.__current_click_is_same_as_last_click(current_click):
             return False
         if self.__volume_up_clicked(current_clicks) and self.__volume_down_clicked(
@@ -176,10 +187,10 @@ class Play:  # pylint: disable=too-many-instance-attributes
             return True
         return False
 
-    def __chime_mode_clicked(self, current_click):
+    def __chime_mode_clicked(self, current_click: Optional[int]) -> bool:
         return current_click == self.chime_mode_button
 
-    def __rickroll(self):
+    def __rickroll(self) -> bool:
         if self.__page_current != self.rickroll_page:
             return False
         if self.rickroll_counter == self.rickroll_frequency:
@@ -188,21 +199,21 @@ class Play:  # pylint: disable=too-many-instance-attributes
         self.rickroll_counter += 1
         return False
 
-    def __play_clicked(self, current_button_click):
+    def __play_clicked(self, current_button_click: Optional[int]) -> bool:
         if self.__valid_play_click(
             current_button_click
         ) and self.__current_click_is_not_same_as_last_click(current_button_click):
             return True
         return False
 
-    def __momentary_stop_click(self, current_button_click):
+    def __momentary_stop_click(self, current_button_click: Optional[int]) -> bool:
         return (
             self.__momentary_click_page()
             and not self.__valid_play_click(current_button_click)
             and self.__valid_play_click(self.last_button_click)
         )
 
-    def __stop_click(self, current_button_click):
+    def __stop_click(self, current_button_click: Optional[int]) -> bool:
         return (
             self.__regular_click_page()
             and self.__valid_play_click(current_button_click)
@@ -210,20 +221,20 @@ class Play:  # pylint: disable=too-many-instance-attributes
             and self.__current_click_is_not_same_as_last_click(current_button_click)
         )
 
-    def __stop_clicked(self, current_button_click):
+    def __stop_clicked(self, current_button_click: Optional[int]) -> bool:
         return self.__stop_click(current_button_click) or self.__momentary_stop_click(
             current_button_click
         )
 
-    def __reset_last_play_button_click(self):
+    def __reset_last_play_button_click(self) -> None:
         self.last_play_button_click = -1
 
     @property
-    def page_current(self):
+    def page_current(self) -> int:
         return self.__page_current
 
     @page_current.setter
-    def page_current(self, page):
+    def page_current(self, page: int) -> None:
         if 0 <= page < self.page_size:
             self.__page_current = page
         else:
@@ -231,13 +242,13 @@ class Play:  # pylint: disable=too-many-instance-attributes
                 f"Invalid page '{page}', must be between 0 and {self.page_size}"
             )
 
-    def __ready_to_sleep(self):
+    def __ready_to_sleep(self) -> bool:
         return (
             time.monotonic() - self.last_activity_at_secs
             > CONFIG.SLEEP_ON_INACTIVITY_FOR_SECS
         )
 
-    def __going_to_sleep(self, actions, audio_playing=False):
+    def __going_to_sleep(self, actions: List[Any], audio_playing: bool = False) -> bool:
         sleep = (
             not actions
             and not audio_playing
@@ -248,30 +259,30 @@ class Play:  # pylint: disable=too-many-instance-attributes
             self.sleeping = True
         return sleep
 
-    def __waking_up(self, actions):
+    def __waking_up(self, actions: List[Any]) -> bool:
         if actions:
             self.last_activity_at_secs = time.monotonic()
         woke = actions and self.sleeping
         if woke:
             self.sleeping = False
-        return woke
+        return bool(woke)
 
-    def page_led(self, page=None):
+    def page_led(self, page: Optional[int] = None) -> Tuple[int, int, int]:
         if page and 0 < page < len(CONFIG.MODE_LED_COLOR):
             return CONFIG.MODE_LED_COLOR[page]
         return CONFIG.MODE_LED_COLOR[self.__page_current]
 
     # TODO FIXME Modularise using a state machine approach
-    def process_clicks(
-        self, touches, audio_playing=False
-    ):  # pylint: disable=too-many-branches, too-many-statements
+    def process_clicks(  # pylint: disable=too-many-branches, too-many-statements
+        self, touches: List[bool], audio_playing: bool = False
+    ) -> List[Any]:
 
         assert (
             len(touches) <= CONFIG.TOUCH_BUTTON_COUNT
         )  # TODO FIXME Change to == check ?
 
         current_button_clicks = []
-        current_button_click = None
+        current_button_click = None  # Ignore type check warning for None since it will be verified before use
         for i, touch in enumerate(touches):
             if touch:
                 current_button_clicks.append(i)
@@ -287,7 +298,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
             if self.__volume_down_clicked(current_button_clicks):
                 current_button_click = self.audio_down_button
 
-        actions = []
+        actions: List[Any] = []
         # Control buttons have preference over play buttons so check them first
         if self.__volume_clicked(current_button_clicks, current_button_click):
             actions.append({self.GAIN: [self.audio_gain_current]})
@@ -308,16 +319,16 @@ class Play:  # pylint: disable=too-many-instance-attributes
             actions.append({self.STOP: None})
             actions.append({self.LED: CONFIG.SLEEP_LED_COLOR})
             self.__reset_last_play_button_click()
-        elif self.__play_clicked(current_button_click):  # do not restart
+        elif self.__play_clicked(current_button_click):  # Do not restart
             play_song = CONFIG.PLAY_LIST_BY_MODE[self.__page_current][
-                current_button_click
+                current_button_click  # type: ignore[index]
             ]
             if self.__rickroll():
                 play_song = CONFIG.RICKROLL_AUDIO_FILE
             # Default static led when flair mode is disabled
             actions.append({self.LED: CONFIG.MODE_LED_COLOR[self.__page_current]})
             actions.append({self.PLAY: play_song})
-            self.last_play_button_click = current_button_click
+            self.last_play_button_click = current_button_click  # type: ignore[assignment]
 
         if self.__going_to_sleep(actions, audio_playing):
             actions.append({self.LED: CONFIG.SLEEP_LED_COLOR})
@@ -331,42 +342,42 @@ class Play:  # pylint: disable=too-many-instance-attributes
         if self.__valid_control_click(current_button_clicks):
             self.__reset_last_play_button_click()
 
-        self.last_button_click = current_button_click
+        self.last_button_click = current_button_click  # type: ignore[assignment]
 
         self.__debug(current_button_clicks, actions)
 
         return actions
 
     @staticmethod
-    def __is_action(action, action_type):
+    def __is_action(action: Dict[str, Any], action_type: str) -> bool:
         return next(iter(action)) == action_type
 
-    def is_play(self, action):
+    def is_play(self, action: Dict[str, Any]) -> bool:
         return self.__is_action(action, self.PLAY)
 
-    def is_stop(self, action):
+    def is_stop(self, action: Dict[str, Any]) -> bool:
         return self.__is_action(action, self.STOP)
 
-    def is_beep(self, action):
+    def is_beep(self, action: Dict[str, Any]) -> bool:
         return self.__is_action(action, self.BEEP)
 
-    def is_led(self, action):
+    def is_led(self, action: Dict[str, Any]) -> bool:
         return self.__is_action(action, self.LED)
 
-    def is_gain(self, action):
+    def is_gain(self, action: Dict[str, Any]) -> bool:
         return self.__is_action(action, self.GAIN)
 
-    def is_sleep(self, action):
+    def is_sleep(self, action: Dict[str, Any]) -> bool:
         return self.__is_action(action, self.SLEEP)
 
-    def is_wake(self, action):
+    def is_wake(self, action: Dict[str, Any]) -> bool:
         return self.__is_action(action, self.WAKE)
 
     @staticmethod
-    def get_params(action):
+    def get_params(action: Dict[str, Any]) -> Any:
         return list(action.values())[0]
 
-    def get_play_files(self):
+    def get_play_files(self) -> List[str]:
         return sum(
             CONFIG.PLAY_LIST_BY_MODE,
             [
@@ -376,18 +387,20 @@ class Play:  # pylint: disable=too-many-instance-attributes
             ],
         )
 
-    def get_chime_files(self):
+    def get_chime_files(self) -> List[str]:
         return list(
             {file for files in CONFIG.CHIME_SPECIAL_DAYS.values() for file in files}
         )
 
-    def get_files(self):
+    def get_files(self) -> List[str]:
         files = self.get_play_files()
         files.extend(self.get_chime_files())
         return files
 
-    def get_chime_actions(self, chimes, audio_file=CONFIG.CHIME_AUDIO_FILE):
-        actions = []
+    def get_chime_actions(
+        self, chimes: int, audio_file: str = CONFIG.CHIME_AUDIO_FILE
+    ) -> List[Any]:
+        actions: List[Any] = []
         if not self.chime_on:
             return actions
         print(f"Playing {chimes} x {audio_file} chimes")
@@ -399,9 +412,9 @@ class Play:  # pylint: disable=too-many-instance-attributes
             actions.insert(0, {self.WAKE: None})  # first action
         return actions
 
-    def process_web_click(self, web_click):
+    def process_web_click(self, web_click: int) -> List[Any]:
         # Web click is not zero indexed, zero is used for stop play
-        actions = {}
+        actions = []
         if web_click == 0:
             actions = [{self.STOP: None}, {self.LED: CONFIG.SLEEP_LED_COLOR}]
         elif web_click is not None and self.__valid_play_click(web_click - 1):
@@ -413,7 +426,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
             ]
         return actions
 
-    def __debug(self, current_clicks, result):
+    def __debug(self, current_clicks: List[int], result: List[Any]) -> None:
         if not self.debug:
             return
         if self.trace:
@@ -426,14 +439,14 @@ class Play:  # pylint: disable=too-many-instance-attributes
             )
 
     @staticmethod
-    def debug_click_status_info():
+    def debug_click_status_info() -> None:
         print()
         print(
             "----=__==___ X [] - PLAY, = CONTROL, _ UNUSED, | CLICKED, X PAGE, [] ACTIONS"
         )
         print()
 
-    def __debug_click_status(self, clicks):
+    def __debug_click_status(self, clicks: List[int]) -> str:
         click_status = ["_"] * CONFIG.TOUCH_BUTTON_COUNT
         for i in range(len(CONFIG.PLAY_LIST_BY_MODE[0])):
             click_status[i] = "-"

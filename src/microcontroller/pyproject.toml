@@ -10,3 +10,6 @@ disable = [
     "import-outside-toplevel", # memory constrain use late imports
     "invalid-name", # using r, g, b and e for exception
 ]
+[tool.mypy]
+ignore_missing_imports = true
+

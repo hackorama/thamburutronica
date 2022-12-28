@@ -1,5 +1,6 @@
 import gc
 import time
+from typing import Any, Dict, List, Optional
 
 from chime import Chime
 from config import CONFIG
@@ -26,8 +27,8 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
     ACTIONS: Enumerated events mapped to MCU module method calls
     """
 
-    def __init__(self):
-        self.web = None
+    def __init__(self) -> None:
+        self.web: Optional[Any] = None  # Web is lazy imported later so mark it Any type
         self.time_tracker = time.monotonic()
 
         self.memory_sweep()
@@ -57,7 +58,9 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
 
         self.__report_system_status(web_status, storage_status)
 
-    def __report_system_status(self, web_status, storage_status):
+    def __report_system_status(
+        self, web_status: Optional[bool], storage_status: bool
+    ) -> None:
         if storage_status and web_status:
             # Both storage and wi-fi ok
             self.pico.set_led_rgb(CONFIG.STARTUP_READY_LED)
@@ -82,7 +85,7 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
 
         self.memory_sweep()
 
-    def __init_check_wifi(self):
+    def __init_check_wifi(self) -> Optional[bool]:
         # Routes defined in Web will get initialised during get_web_instance import
         # and could fail without wi-fi
         try:
@@ -91,7 +94,7 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
             print(f"ERROR: Failed in wi-fi with error: {error}")
         return None
 
-    def __init_wifi(self):
+    def __init_wifi(self) -> bool:
         result = True
         if not CONFIG.MCU_SUPPORTS_WIFI:
             print("WARNING: Board do not support Wi-Fi")
@@ -115,12 +118,14 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
             self.pico.set_led_rgb(CONFIG.STARTUP_WIFI_FAIL_LED)
         return result
 
-    def __process_clicks(self):
+    def __process_clicks(self) -> List[Dict[str, Any]]:
         return self.play.process_clicks(
             self.pico.get_touches(), self.pico.audio_playing()
         )
 
-    def __process_web_click(self, actions):
+    def __process_web_click(
+        self, actions: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
         if not CONFIG.MCU_SUPPORTS_WIFI:
             return actions
         if not self.web or not self.web.connected:
@@ -134,7 +139,7 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
             actions.extend(web_actions)
         return actions
 
-    def __process_flairs(self, actions):
+    def __process_flairs(self, actions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         if not CONFIG.FLAIR_ENABLED:
             return actions
         r, g, b = self.pico.get_led()
@@ -143,7 +148,7 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
             actions.append(flair_action)
         return actions
 
-    def __process_chimes(self, actions):
+    def __process_chimes(self, actions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         chimes = self.chime.get_chimes()
         # TODO Consider clearing existing actions for chimes
         if chimes:  # Extend list of actions
@@ -152,7 +157,7 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
             )
         return actions
 
-    def process(self):
+    def process(self) -> None:
         actions = self.__process_chimes(
             self.__process_flairs(self.__process_web_click(self.__process_clicks()))
         )
@@ -184,14 +189,14 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
         self.__safe_memory_sweep(actions)
 
     @staticmethod
-    def memory_sweep():
+    def memory_sweep() -> None:
         # On a memory restricted MCU like Pi Pico call the garbage collector early and often
         # Refer: https://learn.adafruit.com/Memory-saving-tips-for-CircuitPython
         if CONFIG.MCU_MEMORY_CONSTRAINED:
             print("Memory sweep ...")
             gc.collect()
 
-    def __safe_memory_sweep(self, actions):
+    def __safe_memory_sweep(self, actions: List[Dict[str, Any]]) -> None:
         periodic_sweep = False
         if time.monotonic() - self.time_tracker > CONFIG.PERIODIC_MEMORY_SWEEP_SECS:
             self.time_tracker = time.monotonic()

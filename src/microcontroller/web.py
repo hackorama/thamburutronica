@@ -3,6 +3,7 @@ import ipaddress
 import json
 import os
 import time
+from typing import List, Optional
 
 import adafruit_ntp
 import adafruit_requests
@@ -40,9 +41,14 @@ class Web:  # pylint: disable=too-many-instance-attributes
           Switch to newer version with request params support when stable
     """
 
-    def __init__(self, ssid=None, password=None, retries=1):
+    def __init__(
+        self,
+        ssid: Optional[str] = None,
+        password: Optional[str] = None,
+        retries: int = 1,
+    ) -> None:
         # Queue filled by POST route handler and drained by get_click()
-        self.web_clicks = []
+        self.web_clicks: List[str] = []
         self.__device_registered = False
         self.__connected = False
 
@@ -67,7 +73,7 @@ class Web:  # pylint: disable=too-many-instance-attributes
                 else:
                     print(f"ERROR: Failed connecting to ssid {self.ssid}", e)
 
-    def __init_wifi(self, max_retries=1):
+    def __init_wifi(self, max_retries: int = 1) -> Optional[socketpool.SocketPool]:
         retries = max_retries
         while retries:
             retries -= 1
@@ -81,8 +87,9 @@ class Web:  # pylint: disable=too-many-instance-attributes
                 return socketpool.SocketPool(wifi.radio)
             except Exception as error:
                 print(f"ERROR: Failed starting Wi-Fi on ssid {self.ssid}", error)
+        return None
 
-    def __init_server(self, max_retries=1):
+    def __init_server(self, max_retries: int = 1) -> Optional[HTTPServer]:
         retries = max_retries
         while retries:
             retries -= 1
@@ -105,22 +112,23 @@ class Web:  # pylint: disable=too-many-instance-attributes
                     # TODO FIXME Rename microcontroller package
                     microcontroller.reset()  # pylint: disable=no-member
                 del http_server  # GC collection hint
+        return None
 
     @property
-    def device_registered(self):
+    def device_registered(self) -> bool:
         return self.__device_registered
 
     @property
-    def connected(self):
+    def connected(self) -> bool:
         return self.__connected
 
     @staticmethod
-    def ping(host):
+    def ping(host: str) -> None:
         ipv4 = ipaddress.ip_address(host)
         ping_ms = wifi.radio.ping(ipv4) * 1000
         print(f"Ping google.com: {ping_ms} ms")
 
-    def get(self, url):
+    def get(self, url: str) -> Optional[str]:
         print(f"GET {url} ...")
         requests = adafruit_requests.Session(self.pool)
         r = None
@@ -135,15 +143,15 @@ class Web:  # pylint: disable=too-many-instance-attributes
                 r.close()
         return None
 
-    def get_click(self):
+    def get_click(self) -> Optional[str]:
         if self.web_clicks:
             return self.web_clicks.pop()
         return None
 
-    def put_click(self, web_click):
+    def put_click(self, web_click: str) -> None:
         self.web_clicks.append(web_click)
 
-    def register_device(self):
+    def register_device(self) -> None:
         app_server = os.getenv(CONFIG.APP_API_SERVER_ENV)
         if not app_server:
             print(
@@ -161,19 +169,23 @@ class Web:  # pylint: disable=too-many-instance-attributes
         except Exception as error:
             print(f"Device registering failed with error {error}")
 
-    def get_server(self):
+    def get_server(self) -> Optional[HTTPServer]:
         return self.server
 
     @staticmethod
-    def get_device_metrics():
+    def get_device_metrics() -> int:
         # TODO no-member: Check CircuitPython lib stub issue ?
-        mem_used = gc.mem_alloc()  # pylint: disable=no-member
-        mem_free = gc.mem_free()  # pylint: disable=no-member
+        mem_used = (
+            gc.mem_alloc()  # type: ignore[attr-defined] # pylint: disable=no-member
+        )
+        mem_free = (
+            gc.mem_free()  # type: ignore[attr-defined] # pylint: disable=no-member
+        )
         mem_available = mem_used + mem_free
         mem_used_pct = int((mem_used / mem_available) * 100) if mem_available else 0
         return mem_used_pct
 
-    def sync_time(self, max_retries=1):
+    def sync_time(self, max_retries: int = 1) -> bool:
         retries = max_retries
         tz_offset = int(os.getenv(CONFIG.NTP_TZ_OFFSET_ENV, "0"))  # Defaults to UTC/GM
         while retries:
@@ -192,9 +204,10 @@ class Web:  # pylint: disable=too-many-instance-attributes
                 return int(datetime.now().year) > CONFIG.MCU_CHIP_EPOCH_YEAR
             except Exception as error:  # pylint: disable=broad-except
                 print(f"Failed NTP sync with error {error}")
+        return False
 
 
-def get_web_instance():
+def get_web_instance() -> Optional[Web]:
     # Using a global instance since HTTPServer routes has to be defined
     # outside the class using server member variable from the Web class
     global web  # pylint: disable=global-statement
@@ -204,52 +217,52 @@ def get_web_instance():
 
 
 web = get_web_instance()
-server = get_web_instance().get_server()
+server = get_web_instance().get_server()  # type: ignore[union-attr]
 
 
-@server.route("/")
+@server.route("/")  # type: ignore[union-attr]
 def index(request):  # pylint: disable=unused-argument
     return HTTPResponse(content_type="text/html", body="thamburu")
 
 
-@server.route("/ping")
+@server.route("/ping")  # type: ignore[union-attr]
 def ping(request):  # pylint: disable=unused-argument
     print("ping")
     return HTTPResponse(content_type="text/html", body="pong")
 
 
-@server.route("/diag")
+@server.route("/diag")  # type: ignore[union-attr]
 def diag(request):  # pylint: disable=unused-argument
     return HTTPResponse(
         content_type="text/html", body=json.dumps(web.get_device_metrics())
     )
 
 
-@server.route("/chord/0", "POST")
+@server.route("/chord/0", "POST")  # type: ignore[union-attr]
 def chord_zero(request):  # pylint: disable=unused-argument
     web.put_click(0)
     return HTTPResponse(content_type="text/html", body="ok")
 
 
-@server.route("/chord/1", "POST")
+@server.route("/chord/1", "POST")  # type: ignore[union-attr]
 def chord_one(request):  # pylint: disable=unused-argument
     web.put_click(1)
     return HTTPResponse(content_type="text/html", body="ok")
 
 
-@server.route("/chord/2", "POST")
+@server.route("/chord/2", "POST")  # type: ignore[union-attr]
 def chord_two(request):  # pylint: disable=unused-argument
     web.put_click(2)
     return HTTPResponse(content_type="text/html", body="ok")
 
 
-@server.route("/chord/3", "POST")
+@server.route("/chord/3", "POST")  # type: ignore[union-attr]
 def chord_three(request):  # pylint: disable=unused-argument
     web.put_click(3)
     return HTTPResponse(content_type="text/html", body="ok")
 
 
-@server.route("/chord/4", "POST")
+@server.route("/chord/4", "POST")  # type: ignore[union-attr]
 def chord_four(request):  # pylint: disable=unused-argument
     web.put_click(4)
     return HTTPResponse(content_type="text/html", body="ok")

@@ -1,5 +1,6 @@
 import gc
 import os
+from typing import Any, List, Optional, Tuple
 
 import board
 from adafruit_mpr121 import MPR121
@@ -52,7 +53,7 @@ class Pico:  # pylint: disable=too-many-instance-attributes
     BUTTON_PINS = [board.GP20, board.GP21, board.GP22]
     BUTTON_ACTIVE_LOW_PULL_DOWN = True
 
-    def __init__(self, silent=False, debug=False):
+    def __init__(self, silent: bool = False, debug: bool = False) -> None:
         self.sd_mounted = False
         self.rgb_led = None
         self.led_color_r = 0
@@ -65,7 +66,7 @@ class Pico:  # pylint: disable=too-many-instance-attributes
         self.amp_tpa = None
         self.silent = silent
         self.debug = debug
-        self.buffer = None
+        self.buffer: Optional[Any] = None
 
         self.__init_audio()
         gc.collect()
@@ -79,7 +80,7 @@ class Pico:  # pylint: disable=too-many-instance-attributes
         self.__init_amp()
         gc.collect()
 
-    def __init_touch(self):
+    def __init_touch(self) -> None:
         if not self.touch_i2c:
             self.touch_i2c = I2C(self.TOUCH_CLOCK_PIN, self.TOUCH_DATA_PIN)
         if not self.touch_mpr121:
@@ -87,7 +88,7 @@ class Pico:  # pylint: disable=too-many-instance-attributes
                 self.touch_i2c
             )  # Using address MPR121(i2c, address=0x91)
 
-    def __init_rgb_led(self):
+    def __init_rgb_led(self) -> None:
         if not self.rgb_led:
             try:
                 self.rgb_led = RGBLED(
@@ -102,10 +103,10 @@ class Pico:  # pylint: disable=too-many-instance-attributes
                     e,
                 )
 
-    def __init_led(self):
+    def __init_led(self) -> None:
         self.__init_rgb_led()
 
-    def __init_audio(self):
+    def __init_audio(self) -> None:
         if CONFIG.AUDIO_BUFFER_SIZE_BYTES:
             self.buffer = bytearray(CONFIG.AUDIO_BUFFER_SIZE_BYTES)
         if not self.audio_out:
@@ -114,16 +115,16 @@ class Pico:  # pylint: disable=too-many-instance-attributes
                 self.AUDIO_PIN, quiescent_value=CONFIG.AUDIO_QUIESCENT_VALUE
             )
 
-    def __init_amp(self):
+    def __init_amp(self) -> None:
         if not self.amp_i2c:
             self.amp_i2c = I2C(self.AMP_CLOCK_PIN, self.AMP_DATA_PIN)
         if not self.amp_tpa:
             self.amp_tpa = TPA2016(self.amp_i2c)
-            if self.AMP_MONO:
+            if self.amp_tpa and self.AMP_MONO:
                 self.amp_tpa.speaker_enable_r = False
             self.set_gain(CONFIG.AUDIO_GAIN_DEFAULT_DB)
 
-    def __mount_sdcard(self):
+    def __mount_sdcard(self) -> None:
         if self.sd_mounted:
             return
         # TODO SD_CLOCK_PIN, MOSI=SD_MAIN_IN_PIN, MISO=SD_MAIN_OUT_PIN
@@ -135,31 +136,34 @@ class Pico:  # pylint: disable=too-many-instance-attributes
             print(os.listdir(CONFIG.SD_MOUNT))
         self.sd_mounted = True
 
-    def set_led(self, r=0, g=0, b=0):
+    def set_led(self, r: int = 0, g: int = 0, b: int = 0) -> None:
         if self.rgb_led:
             self.led_color_r = r
             self.led_color_g = g
             self.led_color_b = b
             self.rgb_led.color = (self.led_color_r, self.led_color_g, self.led_color_b)
 
-    def set_led_rgb(self, rgb=(0, 0, 0)):
+    def set_led_rgb(self, rgb: Tuple[int, int, int] = (0, 0, 0)) -> None:
         self.set_led(rgb[0], rgb[1], rgb[2])
 
-    def get_led(self):
+    def get_led(self) -> Tuple[int, int, int]:
         return self.led_color_r, self.led_color_g, self.led_color_b
 
-    def beep(self, audio_file=None):
+    def beep(self, audio_file: Optional[str] = None) -> None:
         if self.silent:
             return
         if not audio_file:
             audio_file = CONFIG.AUDIO_BEEP_FILE
         self.play(self.__resolve_storage_path(audio_file))
 
-    def set_gain(self, db):
+    def set_gain(self, db: int) -> None:
         if self.amp_tpa:
             self.amp_tpa.fixed_gain = db
 
-    def __play_audio(self, file, sample, count=1):
+    def __play_audio(self, file: str, sample: WaveFile, count: int = 1) -> None:
+        if not self.audio_out:
+            print(f"ERROR: Audio not ready, skip playing {file}")
+            return
         for i in range(count):
             print(f"Playing: {file} {i+1}/{count}")
             self.audio_out.play(sample)
@@ -167,7 +171,7 @@ class Pico:  # pylint: disable=too-many-instance-attributes
             while count > 1 and self.audio_out.playing:
                 pass
 
-    def play_wave(self, audio_file, count=1):
+    def play_wave(self, audio_file: str, count: int = 1) -> None:
         if self.buffer:
             wave = WaveFile(audio_file, self.buffer)
         else:
@@ -175,7 +179,7 @@ class Pico:  # pylint: disable=too-many-instance-attributes
         self.__play_audio(audio_file, wave, count)
 
     @staticmethod
-    def __file_exists(path):
+    def __file_exists(path: str) -> bool:
         try:
             os.stat(path)
             return True
@@ -183,7 +187,7 @@ class Pico:  # pylint: disable=too-many-instance-attributes
             pass
         return False
 
-    def __resolve_storage_path(self, file):
+    def __resolve_storage_path(self, file: str) -> Optional[str]:
         on_board_path = f"{file}"
         if self.__file_exists(on_board_path):
             return on_board_path
@@ -193,9 +197,9 @@ class Pico:  # pylint: disable=too-many-instance-attributes
         print(f"ERROR: File not found on on-board storage or on sd card: {file}")
         return None
 
-    def play(self, audio_file, count=1):
+    def play(self, audio_file: Optional[str], count: int = 1) -> None:
         self.stop()
-        if audio_file.lower().endswith(".wav"):
+        if audio_file and audio_file.lower().endswith(".wav"):
             file_path = self.__resolve_storage_path(audio_file)
             if file_path:
                 self.play_wave(file_path, count)
@@ -204,19 +208,21 @@ class Pico:  # pylint: disable=too-many-instance-attributes
         else:
             print(f"ERROR: Skipping unknown audio file type {audio_file}")
 
-    def stop(self):
-        if self.audio_out.playing:
+    def stop(self) -> None:
+        if self.audio_out and self.audio_out.playing:
             print("Stopping audio")
             self.audio_out.stop()
 
-    def get_touches(self):
+    def get_touches(self) -> List[bool]:
         touches = [False] * CONFIG.TOUCH_BUTTON_COUNT
+        if not self.touch_mpr121:
+            return touches
         for i in range(CONFIG.TOUCH_BUTTON_COUNT):
             touches[i] = self.touch_mpr121[i].value
         return touches
 
     @staticmethod
-    def check_storage(files):
+    def check_storage(files: List[str]) -> bool:
         result = True
         sd_files = os.listdir(CONFIG.SD_MOUNT)
         for file in files:
@@ -225,18 +231,24 @@ class Pico:  # pylint: disable=too-many-instance-attributes
                 result = False
         return result
 
-    def sleep(self):
+    def sleep(self) -> None:
+        if not self.amp_tpa:
+            print("ERROR: Amp not ready, skip sleep")
+            return
         self.amp_tpa.speaker_enable_l = False
         self.amp_tpa.speaker_enable_r = False
         if self.AMP_SHUTDOWN_ON_SLEEP:
             self.amp_tpa.amplifier_shutdown = True
 
-    def wake(self):
+    def wake(self) -> None:
+        if not self.amp_tpa:
+            print("ERROR: Amp not ready, skip wake")
+            return
         if self.AMP_SHUTDOWN_ON_SLEEP:
             self.amp_tpa.amplifier_shutdown = False
         self.amp_tpa.speaker_enable_l = True
         if not self.AMP_MONO:
             self.amp_tpa.speaker_enable_r = True
 
-    def audio_playing(self):
-        return self.audio_out.playing
+    def audio_playing(self) -> bool:
+        return bool(self.audio_out and self.audio_out.playing)

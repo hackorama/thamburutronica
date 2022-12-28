@@ -1,3 +1,5 @@
+from typing import Any, Dict, Optional
+
 from config import CONFIG
 
 
@@ -9,7 +11,21 @@ class Flair:  # pylint: disable=too-few-public-methods
     DEFAULT = "DEFAULT"
     LED = "LED"
 
-    def __init__(self):
+    def __init__(self) -> None:
+        self.led_restore_r: Optional[int] = None
+        self.led_restore_g: Optional[int] = None
+        self.led_restore_b: Optional[int] = None
+
+        self.animated_r: Optional[int] = None
+        self.animated_g: Optional[int] = None
+        self.animated_b: Optional[int] = None
+
+        self.animation_speed = CONFIG.FLAIR_ANIMATION_SPEED
+
+    def __led_animated(self) -> bool:
+        return self.led_restore_r is not None
+
+    def __reset_restore_led(self, speed: int) -> None:
         self.led_restore_r = None
         self.led_restore_g = None
         self.led_restore_b = None
@@ -17,22 +33,11 @@ class Flair:  # pylint: disable=too-few-public-methods
         self.animated_r = None
         self.animated_g = None
         self.animated_b = None
-
-        self.animation_speed = CONFIG.FLAIR_ANIMATION_SPEED
-
-    def __led_animated(self):
-        return self.led_restore_r is not None
-
-    def __reset_restore_led(self, speed):
-        self.led_restore_r = None
-        self.led_restore_g = None
-        self.led_restore_b = None
-
-        self.animated_r = None
-        self.animated_g = None
         self.animation_speed = speed
 
-    def __set_restore_led(self, r, g, b, speed):
+    def __set_restore_led(
+        self, r: Optional[int], g: Optional[int], b: Optional[int], speed: int
+    ) -> None:
         self.led_restore_r = r
         self.led_restore_g = g
         self.led_restore_b = b
@@ -41,11 +46,11 @@ class Flair:  # pylint: disable=too-few-public-methods
         self.animated_b = b
         self.animation_speed = speed
 
-    def __level_effect(self, level=0):
+    def __level_effect(self, level: int = 0) -> None:
         print(f"Audio level {level}")  # TODO Implement LED level effect
 
-    def __breath_effect(self):
-        if self.animated_r != 0:
+    def __breath_effect(self) -> None:
+        if self.animated_r and self.animated_r != 0:
             self.animated_r += self.animation_speed
             if self.animated_r >= 255:
                 self.animated_r = 255
@@ -53,7 +58,7 @@ class Flair:  # pylint: disable=too-few-public-methods
             elif self.animated_r <= 0:
                 self.animated_r = 1
                 self.animation_speed = abs(self.animation_speed)
-        if self.animated_g != 0:
+        if self.animated_g and self.animated_g != 0:
             self.animated_g += self.animation_speed
             if self.animated_g >= 255:
                 self.animated_g = 255
@@ -62,7 +67,7 @@ class Flair:  # pylint: disable=too-few-public-methods
                 self.animated_g = 1
                 self.animation_speed = abs(self.animation_speed)
                 self.animated_g += self.animation_speed
-        if self.animated_b != 0:
+        if self.animated_b and self.animated_b != 0:
             self.animated_b += self.animation_speed
             if self.animated_b >= 255:
                 self.animated_b = 255
@@ -71,9 +76,15 @@ class Flair:  # pylint: disable=too-few-public-methods
                 self.animated_b = 1
                 self.animation_speed = abs(self.animation_speed)
 
-    def process(
-        self, led_r, led_g, led_b, audio_playing, audio_level=0, speed=20
-    ):  # pylint: disable=too-many-arguments
+    def process(  # pylint: disable=too-many-arguments
+        self,
+        led_r: int,
+        led_g: int,
+        led_b: int,
+        audio_playing: bool,
+        audio_level: int = 0,
+        speed: int = 20,
+    ) -> Dict[Any, Any]:
         if audio_playing:
             if not self.__led_animated():
                 self.__set_restore_led(led_r, led_g, led_b, speed)

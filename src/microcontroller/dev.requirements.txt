@@ -3,4 +3,6 @@ circup
 import-linter
 isort
 mpy-cross
+mypy
 pylint
+adafruit-circuitpython-typing

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from adafruit_datetime import datetime
 
 from config import CONFIG
@@ -9,25 +11,25 @@ class Chime:  # pylint: disable=too-few-public-methods
     for only the designated time periods.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.__last_hour = -1
         self.__special_track_count = 0
 
     @staticmethod
-    def __current_hour():
+    def __current_hour() -> int:
         return int(datetime.now().hour)
 
-    def current_day(self):
+    def current_day(self) -> str:
         return f"{int(datetime.now().month)}-{int(datetime.now().day)}"
 
     @staticmethod
-    def __chimes(hour):
+    def __chimes(hour: int) -> int:
         return hour if hour <= 12 else hour - 12
 
-    def __valid_hours(self, hour):
+    def __valid_hours(self, hour: int) -> bool:
         return CONFIG.CHIME_START_HOURS <= hour <= CONFIG.CHIME_END_HOURS
 
-    def __hour_changed(self):
+    def __hour_changed(self) -> bool:
         hour = self.__current_hour()
         if self.__last_hour < 0:
             self.__last_hour = hour
@@ -37,17 +39,17 @@ class Chime:  # pylint: disable=too-few-public-methods
         return False
 
     @staticmethod
-    def __time_synced():
+    def __time_synced() -> bool:
         # If time sync failed time will reset to chip epoch
         return int(datetime.now().year) > CONFIG.MCU_CHIP_EPOCH_YEAR
 
-    def get_chimes(self):
+    def get_chimes(self) -> Optional[int]:
         hour = self.__current_hour()
         if self.__time_synced() and self.__hour_changed() and self.__valid_hours(hour):
             return self.__chimes(hour)
         return None
 
-    def get_chime_audio_file(self):
+    def get_chime_audio_file(self) -> str:
         day = self.current_day()
         special_audio_files = CONFIG.CHIME_SPECIAL_DAYS.get(day)
         if special_audio_files:
