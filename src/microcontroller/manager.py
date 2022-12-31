@@ -2,9 +2,9 @@ import gc
 import time
 
 try:
-    from typing import Any, Dict, List, Optional
+    from typing import Any, Dict, List, Optional, Union
 except ImportError:
-    pass  # No typing on device deploy
+    pass  # No typing on device CircuitPython
 
 from chime import Chime
 from config import CONFIG
@@ -37,6 +37,10 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
 
         self.memory_sweep()
 
+        # Suppress unexpected audio interference during Wi-Fi startup
+        # when audio mixer is enabled by doing Wi-Fi init first
+        web_status, web_wifi_failed, web_ntp_failed = self.__init_check_wifi()
+
         self.play = Play()
 
         self.memory_sweep()
@@ -52,26 +56,36 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
 
         self.memory_sweep()
 
-        web_status = self.__init_check_wifi()
-
-        self.memory_sweep()
-
         storage_status = self.pico.check_storage(self.play.get_files())
 
         self.memory_sweep()
 
-        self.__report_system_status(web_status, storage_status)
+        self.__report_system_status(
+            web_status, web_wifi_failed, web_ntp_failed, storage_status
+        )
 
     def __report_system_status(
-        self, web_status: Optional[bool], storage_status: bool
+        self,
+        web_status: Optional[bool],
+        web_wifi_failed: Optional[bool],
+        web_ntp_failed: Optional[bool],
+        storage_status: bool,
     ) -> None:
         if storage_status and web_status:
             # Both storage and wi-fi ok
             self.pico.set_led_rgb(CONFIG.STARTUP_READY_LED)
             self.pico.beep()
             print("Device ready")
-            time.sleep(1)
+            time.sleep(1)  # Show status LED before device ready
         else:
+            # Check specific individual failures first
+            if web_wifi_failed is False:  # None means unknown failure
+                print("ERROR: Wi-Fi connection or server failed")
+                self.pico.set_led_rgb(CONFIG.STARTUP_WIFI_FAIL_LED)
+            if web_ntp_failed is False:  # None means unknown failure
+                print("ERROR: Wi-Fi NTP sync failed")
+                self.pico.set_led_rgb(CONFIG.STARTUP_WIFI_NTP_FAIL_LED)
+            # Check combination failures, that can override individual failures
             if not storage_status and not web_status:
                 # Both storage and w-fi failed
                 self.pico.set_led_rgb(CONFIG.STARTUP_STORAGE_AND_WIFI_FAIL_LED)
@@ -85,24 +99,28 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
                 self.pico.set_led_rgb(CONFIG.STARTUP_WIFI_UNKNOWN_FAIL_LED)
                 print("ERROR: Device not ready, no Wi-Fi")
             print("Wait ...")
-            time.sleep(3)
+            time.sleep(3)  # Show status LED longer on error before continuing
 
         self.memory_sweep()
 
-    def __init_check_wifi(self) -> Optional[bool]:
+    def __init_check_wifi(
+        self,
+    ) -> Union[tuple[bool, bool, bool], tuple[None, None, None]]:
         # Routes defined in Web will get initialised during get_web_instance import
         # and could fail without wi-fi
         try:
             return self.__init_wifi()
         except Exception as error:
             print(f"ERROR: Failed in wi-fi with error: {error}")
-        return None
+        return None, None, None
 
-    def __init_wifi(self) -> bool:
-        result = True
+    def __init_wifi(self) -> tuple[bool, bool, bool]:
+        web_result = True
+        web_ntp_failed = False
+        web_wifi_failed = False
         if not CONFIG.MCU_SUPPORTS_WIFI:
-            print("WARNING: Board do not support Wi-Fi")
-            return result
+            print(f"WARNING: Microcontroller {CONFIG.MCU} does not support Wi-Fi")
+            return web_result, web_wifi_failed, web_ntp_failed
         # Memory constrain, late import  only if board has wi-fi support
         from web import get_web_instance  # pylint: disable=import-outside-toplevel
 
@@ -113,14 +131,12 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
 
         if self.web and self.web.connected:
             if not self.web.sync_time(max_retries=CONFIG.NTP_MAX_RETRIES):
-                result = False
-                print("ERROR: Wi-Fi NTP sync failed")
-                self.pico.set_led_rgb(CONFIG.STARTUP_WIFI_NTP_FAIL_LED)
+                web_result = False
+                web_ntp_failed = True
         else:
-            result = False
-            print("ERROR: Wi-Fi connection or server failed")
-            self.pico.set_led_rgb(CONFIG.STARTUP_WIFI_FAIL_LED)
-        return result
+            web_result = False
+            web_wifi_failed = True
+        return web_result, web_wifi_failed, web_ntp_failed
 
     def __process_clicks(self) -> List[Dict[str, Any]]:
         return self.play.process_clicks(
@@ -139,7 +155,7 @@ class Manager:  # pylint: disable=too-few-public-methods, too-many-instance-attr
         self.web.server.poll()  # TODO FIXME Wrap in a method call
         # TODO Consider clearing existing actions for web click
         web_actions = self.play.process_web_click(self.web.get_click())
-        if web_actions:  # extend list of action
+        if web_actions:  # Extend list of action
             actions.extend(web_actions)
         return actions
 
