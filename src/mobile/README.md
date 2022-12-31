@@ -67,7 +67,7 @@ Server started 34567 ...
 
 ```shell
 $ tail -f server.log
-INFO:     Uvicorn running on http://0.0.0.0:8888 (Press CTRL+C to quit)
+INFO:     Uvicorn running on http://0.0.0.0:80 (Press CTRL+C to quit)
 ...
 INFO:     Application startup complete.
 ```

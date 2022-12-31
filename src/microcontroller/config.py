@@ -4,7 +4,7 @@ class CONFIG:  # pylint: disable=too-few-public-methods
     """
 
     PROJECT_NAME = "Thamburutronica"
-    VERSION = "0.2.0"
+    VERSION = "0.3.0"
 
     MCU = "Pi PICO W"
     MCU_SUPPORTS_WIFI = True

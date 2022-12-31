@@ -6,7 +6,7 @@ A wood working and microcontroller project to create a touch sensor electronic c
 
 [More images](./images/README.md)
 
-[![Thamburutronica video](./images/video.jpeg)](https://vimeo.com/782393389)
+[![Thamburutronica video](./images/video.png)](https://vimeo.com/782393389)
 
 ## Features
 
