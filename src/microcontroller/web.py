@@ -231,12 +231,13 @@ def index(request):  # pylint: disable=unused-argument
 
 @server.route("/ping")  # type: ignore[union-attr]
 def ping(request):  # pylint: disable=unused-argument
-    print("ping")
+    print("WEB: Ping")
     return HTTPResponse(content_type="text/html", body="pong")
 
 
 @server.route("/diag")  # type: ignore[union-attr]
 def diag(request):  # pylint: disable=unused-argument
+    print("WEB: Diag")
     return HTTPResponse(
         content_type="text/html", body=json.dumps(web.get_device_metrics())
     )
@@ -244,29 +245,34 @@ def diag(request):  # pylint: disable=unused-argument
 
 @server.route("/chord/0", "POST")  # type: ignore[union-attr]
 def chord_zero(request):  # pylint: disable=unused-argument
+    print("WEB: Chord 0")
     web.put_click(0)
     return HTTPResponse(content_type="text/html", body="ok")
 
 
 @server.route("/chord/1", "POST")  # type: ignore[union-attr]
 def chord_one(request):  # pylint: disable=unused-argument
+    print("WEB: Chord 1")
     web.put_click(1)
     return HTTPResponse(content_type="text/html", body="ok")
 
 
 @server.route("/chord/2", "POST")  # type: ignore[union-attr]
 def chord_two(request):  # pylint: disable=unused-argument
+    print("WEB: Chord 2")
     web.put_click(2)
     return HTTPResponse(content_type="text/html", body="ok")
 
 
 @server.route("/chord/3", "POST")  # type: ignore[union-attr]
 def chord_three(request):  # pylint: disable=unused-argument
+    print("WEB: Chord 3")
     web.put_click(3)
     return HTTPResponse(content_type="text/html", body="ok")
 
 
 @server.route("/chord/4", "POST")  # type: ignore[union-attr]
 def chord_four(request):  # pylint: disable=unused-argument
+    print("WEB: Chord 4")
     web.put_click(4)
     return HTTPResponse(content_type="text/html", body="ok")

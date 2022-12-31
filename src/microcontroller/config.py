@@ -11,15 +11,17 @@ class CONFIG:  # pylint: disable=too-few-public-methods
     MCU_CHIP_EPOCH_YEAR = 2020  # Chip epoch 2020-01-01T00:00:00
     MCU_MEMORY_CONSTRAINED = True  # True for aggressive memory collection
 
+    AUDIO_AMP_MONO = True  # Enable only Left channel
+    AUDIO_AMP_SHUTDOWN_ON_SLEEP = True
     AUDIO_BUFFER_SIZE_BYTES = 1024  # Valid values 8-1024, 0 for internal default buffer
-    AUDIO_GAIN_DEFAULT_DB = 4
+    AUDIO_GAIN_DEFAULT_DB = 16
     AUDIO_GAIN_MAX_DB = 30
     AUDIO_GAIN_STEP_DB = 2
     AUDIO_QUIESCENT_VALUE = 0  # 0, 1x 32768, 2x 65535 Audio output value when no signal
     AUDIO_BEEP_FILE = "beep.wav"
     AUDIO_MIXER_ENABLED = True
+    AUDIO_MIXER_GAIN_ENABLED = False
     AUDIO_MIXER_VOICE_COUNT = 1
-    AUDIO_MIXER_CHANNEL_COUNT = 1
     AUDIO_MIXER_DEFAULT_CHANNEL = 0
 
     STARTUP_LED = (200, 200, 200)  # white
@@ -89,4 +91,5 @@ class CONFIG:  # pylint: disable=too-few-public-methods
         "1-1": ["als.wav"],
         "7-4": ["hbd.wav"],
         "12-25": ["aiam.wav", "dth.wav", "hth.wav", "jttw.wav", "oct.wav", "sn.wav"],
+        "12-31": ["als.wav"],
     }

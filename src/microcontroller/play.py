@@ -56,13 +56,6 @@ class Play:  # pylint: disable=too-many-instance-attributes
         self.last_button_click = -1
         self.last_play_button_click = -1
 
-        # Map by order the physical button clicks to touch button click
-        self.clicks_to_touches_map = [
-            self.page_flip_button,
-            self.audio_up_button,
-            self.audio_down_button,
-        ]
-
         self.rickroll_page = 2
         self.rickroll_counter = 0
         self.rickroll_frequency = 6
@@ -252,7 +245,9 @@ class Play:  # pylint: disable=too-many-instance-attributes
             > CONFIG.SLEEP_ON_INACTIVITY_FOR_SECS
         )
 
-    def __going_to_sleep(self, actions: List[Any], audio_playing: bool = False) -> bool:
+    def __going_to_sleep(
+        self, actions: List[Dict[str, Any]], audio_playing: bool = False
+    ) -> bool:
         sleep = (
             not actions
             and not audio_playing
@@ -263,7 +258,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
             self.sleeping = True
         return sleep
 
-    def __waking_up(self, actions: List[Any]) -> bool:
+    def __waking_up(self, actions: List[Dict[str, Any]]) -> bool:
         if actions:
             self.last_activity_at_secs = time.monotonic()
         woke = actions and self.sleeping
@@ -279,7 +274,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
     # TODO FIXME Modularise using a state machine approach
     def process_clicks(  # pylint: disable=too-many-branches, too-many-statements
         self, touches: List[bool], audio_playing: bool = False
-    ) -> List[Any]:
+    ) -> List[Dict[str, Any]]:
 
         assert (
             len(touches) <= CONFIG.TOUCH_BUTTON_COUNT
@@ -302,7 +297,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
             if self.__volume_down_clicked(current_button_clicks):
                 current_button_click = self.audio_down_button
 
-        actions: List[Any] = []
+        actions: List[Dict[str, Any]] = []
         # Control buttons have preference over play buttons so check them first
         if self.__volume_clicked(current_button_clicks, current_button_click):
             actions.append({self.GAIN: [self.audio_gain_current]})
@@ -403,7 +398,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
 
     def get_chime_actions(
         self, chimes: int, audio_file: str = CONFIG.CHIME_AUDIO_FILE
-    ) -> List[Any]:
+    ) -> List[Dict[str, Any]]:
         actions: List[Any] = []
         if not self.chime_on:
             return actions
@@ -416,9 +411,9 @@ class Play:  # pylint: disable=too-many-instance-attributes
             actions.insert(0, {self.WAKE: None})  # first action
         return actions
 
-    def process_web_click(self, web_click: int) -> List[Any]:
+    def process_web_click(self, web_click: int) -> List[Dict[str, Any]]:
         # Web click is not zero indexed, zero is used for stop play
-        actions = []
+        actions: List[Dict[str, Any]] = []
         if web_click == 0:
             actions = [{self.STOP: None}, {self.LED: CONFIG.SLEEP_LED_COLOR}]
         elif web_click is not None and self.__valid_play_click(web_click - 1):
@@ -430,7 +425,7 @@ class Play:  # pylint: disable=too-many-instance-attributes
             ]
         return actions
 
-    def __debug(self, current_clicks: List[int], result: List[Any]) -> None:
+    def __debug(self, current_clicks: List[int], result: List[Dict[str, Any]]) -> None:
         if not self.debug:
             return
         if self.trace:
